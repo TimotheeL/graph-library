@@ -8,17 +8,22 @@
 /*
  * Create an empty graph
  */
-void create_graph(struct Graph *self, int nbMaxNodes) {
+void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
+	self->isDirected = isDirected;
 	self->nbMaxNodes = nbMaxNodes;
 	self->adjList = NULL;
-	self->isDirected = false;
 }
 
 /*
  * Destroy a graph
  */
 void destroy_graph(struct Graph *self) {
-
+	for (int nbNodes = 0; nbNodes < nbMaxNodes; nbNodes++) {
+		remove_node(self->adjList[nbNodes]);
+	}
+	
+	free(adjList);
+	free(self);
 }
 
 /*
@@ -31,15 +36,17 @@ void load_graph() {
 /*
  * Add a node to a graph
  */
-void add_node() {
+void add_node(struct Graph *self) {
 
 }
 
 /*
  * Remove a node from a graph
  */
-void remove_node() {
-
+void remove_node(struct Graph *self, int node) {
+	while () {
+		
+	}
 }
 
 /*
