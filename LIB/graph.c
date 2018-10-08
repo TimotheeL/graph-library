@@ -80,7 +80,7 @@ void add_edge(struct Graph *self) {
 void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	assert(self);
 	
-	struct Neighbour *curr = self->adjList[nodeTail];
+	struct Neighbour *curr = self->adjList[nodeTail-1];
 	while (curr != NULL) {
 		if (curr->neighbour == nodeHead) {
 			remove_neighbour(curr);
@@ -90,7 +90,7 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	}
 
 	if (self->isDirected) {
-		curr = self->adjList[nodeHead];
+		curr = self->adjList[nodeHead-1];
 		while (curr != NULL) {
 			if (curr->neighbour == nodeTail) {
 				remove_neighbour(curr);
