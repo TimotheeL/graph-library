@@ -2,4 +2,4 @@ BIN/*
 OBJ/*
 main
 liblist.a
-liibgraph.a
+libgraph.a
