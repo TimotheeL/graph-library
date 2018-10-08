@@ -32,4 +32,7 @@ clean:
 mrproper: clean
 	rm -f liblist.a
 	rm -f libgraph.a
+	rm -f main
+	rm -f a.out
+
 
