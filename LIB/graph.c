@@ -85,20 +85,6 @@ void remove_node(struct Graph *self, int node) {
  */
 void add_edge(struct Graph *self) {
 	assert(self);
-	if (nbNode > self->nbMaxNodes) {
-		fprintf(stderr, "Error: Can't add more than %d nodes in this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
-		exit(EXIT_FAILURE);
-	}
-	if (nbNode < 1) {
-		fprintf(stderr, "Error: Can't add that node in this graph. Please choose a value >= 1");
-		exit(EXIT_FAILURE);
-	}
-	if (self->adjList[nbNode-1] != NULL) {
-		fprintf(stderr, "Error: Can't add a node which already exist. Please choose another value");
-		exit(EXIT_FAILURE);
-	}
-	
-	add_neighbourself->adjList[nbNode-1], -1, 0);
 }
 
 /*
@@ -162,5 +148,5 @@ void save_graph(const struct Graph *self, const char *filename) {
  * Exit the program
  */
 void quit() {
-
+	
 }
