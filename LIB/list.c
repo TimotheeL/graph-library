@@ -1,9 +1,17 @@
+/*
+	PW2 - Graph Library Representation by Adjacency Lists
+	Thibault BERTIN - Timothée LAURENT
+	Master 1 CMI Informatique - TP1A
+*/
+
 #include "../INCLUDE/list.h"
 
 /*
  * Create an empty neighbour
  */
 void create_neighbour(struct Neighbour *self, int neighbour, int weight) {
+	assert(self);
+	
 	self->previousNeighbour = NULL;
 	self->nextNeighbour = NULL;
 	self->neighbour = neighbour;
@@ -17,25 +25,26 @@ void create_neighbour(struct Neighbour *self, int neighbour, int weight) {
  * direction  > 0 	-> call recursively on next neighbours
  * direction  < 0	-> call recursively on previous neighbours
  */
-void remove_all_neighbours(struct Neighbour *self, int direction) {
+void destroy_neighbour_rec(struct Neighbour *self, int direction) {
 	if (!self) {
 		return;	
 	}
 	if (direction <= 0) {
-		remove_all_neighbours(self->previousNeighbour, -1);
+		destroy_neighbour_rec(self->previousNeighbour, -1);
 	}
 	if (direction >= 0) {	
-		remove_all_neighbours(self->nextNeighbour, 1);
+		destroy_neighbour_rec(self->nextNeighbour, 1);
 	}
 	remove_neighbour(self);
 }
 
 /*
- * Destroy a neighbour
+ * Destroy every neighbour from a list
  */
 void destroy_neighbour(struct Neighbour *self) {
 	assert(self);
-	remove_all_neighbours(self, 0);
+	
+	destroy_neighbour_rec(self, 0);
 }
 
 /*
@@ -43,12 +52,19 @@ void destroy_neighbour(struct Neighbour *self) {
  */
 void add_neighbour(struct Neighbour *self, int neighbour, int weight) {
 	assert(self);
+	
+	struct Neighbour *new = malloc(sizeof(struct Neighbour));
+	create_neighbour(new, neighbour, weight);
+	
 	if (!self->previousNeighbour) {
-		struct Neighbour *new = malloc(sizeof(struct Neighbour));
-		create_neighbour(new, neighbour, weight);
 		self->previousNeighbour = new;
-	} 
-	// CAREFUL, WON'T ADD IF PREVIOUS NEIGHBOUR IS OCCUPIED
+		new->nextNeighbour = self;
+	}
+	else {
+		self->previousNeighbour->nextNeighbour = new;
+		new->previousNeighbour = self->previousNeighbour;
+		new->nextNeighbour = self;
+	}
 }
 
 /*
@@ -56,13 +72,40 @@ void add_neighbour(struct Neighbour *self, int neighbour, int weight) {
  */ 
 void remove_neighbour(struct Neighbour *self) {
 	assert(self);
+	
 	self->nextNeighbour->previousNeighbour = self->previousNeighbour;
-	free(self);	
+	
+	free(self);
+}
+
+/*
+ * Recursively count all neighbours
+ * direction indicates the direction to follow to avoid useless recursive calls :
+ * direciton == 0 	-> call recursively on previous and next neighbours
+ * direction  > 0 	-> call recursively on next neighbours
+ * direction  < 0	-> call recursively on previous neighbours
+ */
+void neighbour_size_rec(const struct Neighbour *self, size_t *neighbourSize, int direction) {
+	if (!self) {
+		return;	
+	}
+	if (direction <= 0) {
+		neighbour_size_rec(self, neighbourSize, -1);
+	}
+	if (direction >= 0) {	
+		neighbour_size_rec(self, neighbourSize, 1);
+	}
+	(*neighbourSize)++;
 }
 
 /*
  * Get the size of the list of neighbours
  */
 size_t neighbour_size(const struct Neighbour *self) {
-	return 0;
+	assert(self);
+	
+	size_t neighbourSize = 0;
+	neighbour_size_rec(self, &neighbourSize, 0);
+	
+	return neighbourSize;
 }

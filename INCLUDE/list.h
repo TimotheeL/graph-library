@@ -1,7 +1,7 @@
 /*
 	PW2 - Graph Library Representation by Adjacency Lists
 	Thibault BERTIN - Timothée LAURENT
-	TP1A - CM1
+	Master 1 CMI Informatique - TP1A
 */
 #ifndef LIST_H
 #define LIST_H
@@ -26,7 +26,7 @@ struct Neighbour {
 void create_neighbour(struct Neighbour *self, int neighbour, int weight);
 
 /*
- * Destroy a neighbour
+ * Destroy every neighbour from a list
  */
 void destroy_neighbour(struct Neighbour *self);
 
