@@ -8,10 +8,10 @@ OBJDIR=OBJ/
 TARGET=main
 all: main
 
-main: main.o  liblist.a libgraph.a
+main: $(OBJDIR)main.o  liblist.a libgraph.a
 	$(CC) $(CFLAGS) -o $@ $<
 
-main.o: main.c
+$(OBJDIR)main.o: main.c
 	$(CC) -o $(OBJDIR)main.o -c $(CFLAGS) $<
 
 list.o: $(SRCDIR)/list.c $(INCLUDEDIR)/list.h
@@ -27,7 +27,7 @@ libgraph.a: graph.o
 	ar cr $@ $(OBJDIR)graph.o
 
 clean:
-	rm -f $(OBJ)
+	rm -f $(OBJDIR)*
 
 mrproper: clean
 	rm -f liblist.a
