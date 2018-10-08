@@ -62,7 +62,17 @@ void remove_edge() {
 void view_graph(const struct Graph *self) {
 	printf("# maximum number of nodes\n%d\n# directed", self->nbMaxNodes);
 	printf(self->isDirected ? "y" : "n"); 
-	printf("\n# node: neighbours");
+	printf("\n# node: neighbours\n");
+	for (int i = 0; i < self->nbMaxNodes; i++) {
+		if (self->adjList[i]) {
+			printf("%d: ",i);
+			struct Neighbour *curr = self->adjList[i];
+			while (curr) {
+				printf("(%d/%d)",curr->neighbour, curr->weight);
+				curr = curr->next;
+			}
+		}	
+	}
 }
 
 /*
