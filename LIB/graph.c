@@ -25,7 +25,6 @@ void destroy_graph(struct Graph *self) {
 		remove_node(self, self->adjList[nbNodes].neighbour);
 	}
 
-	
 	free(self->adjList);
 	free(self);
 }
@@ -34,7 +33,7 @@ void destroy_graph(struct Graph *self) {
  * Load graph from file
  */ 
 void load_graph(const char *filename) {
-
+	
 }
 
 /*
