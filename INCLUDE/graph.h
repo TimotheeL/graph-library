@@ -24,7 +24,7 @@ struct Graph {
 /*
  * Create an empty graph
  */
-void create_graph(struct Graph *self, int nbMaxNodes);
+void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes);
 
 /*
  * Destroy a graph
@@ -39,12 +39,12 @@ void load_graph();
 /*
  * Add a node to a graph
  */
-void add_node();
+void add_node(struct Graph *self);
 
 /*
  * Remove a node from a graph
  */
-void remove_node();
+void remove_node(struct Graph *self, struct Neighbour *self);
 
 /*
  * Add an edge to a graph

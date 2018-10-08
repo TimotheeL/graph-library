@@ -8,17 +8,22 @@
 /*
  * Create an empty graph
  */
-void create_graph(struct Graph *self, int nbMaxNodes) {
+void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
+	self->isDirected = isDirected;
 	self->nbMaxNodes = nbMaxNodes;
 	self->adjList = NULL;
-	self->isDirected = false;
 }
 
 /*
  * Destroy a graph
  */
 void destroy_graph(struct Graph *self) {
-
+	for (int nbNodes = 0; nbNodes < nbMaxNodes; nbNodes++) {
+		remove_node(self->adjList[nbNodes]);
+	}
+	
+	free(adjList);
+	free(self);
 }
 
 /*
@@ -31,15 +36,17 @@ void load_graph() {
 /*
  * Add a node to a graph
  */
-void add_node() {
+void add_node(struct Graph *self) {
 
 }
 
 /*
  * Remove a node from a graph
  */
-void remove_node() {
-
+void remove_node(struct Graph *self, int node) {
+	while () {
+		
+	}
 }
 
 /*
@@ -62,7 +69,17 @@ void remove_edge() {
 void view_graph(const struct Graph *self) {
 	printf("# maximum number of nodes\n%d\n# directed", self->nbMaxNodes);
 	printf(self->isDirected ? "y" : "n"); 
-	printf("\n# node: neighbours");
+	printf("\n# node: neighbours\n");
+	for (int i = 0; i < self->nbMaxNodes; i++) {
+		if (self->adjList[i]) {
+			printf("%d: ",i);
+			struct Neighbour *curr = self->adjList[i];
+			while (curr) {
+				printf("(%d/%d)",curr->neighbour, curr->weight);
+				curr = curr->next;
+			}
+		}	
+	}
 }
 
 /*
