@@ -18,8 +18,8 @@ void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
  * Destroy a graph
  */
 void destroy_graph(struct Graph *self) {
-	for (int nbNodes = 0; nbNodes < nbMaxNodes; nbNodes++) {
-		remove_node(self->adjList[nbNodes]);
+	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
+		remove_node(&self->adjList[nbNodes]);
 	}
 	
 	free(self->adjList);
@@ -29,7 +29,7 @@ void destroy_graph(struct Graph *self) {
 /*
  * Load graph from file
  */ 
-void load_graph() {
+void load_graph(const char *filename) {
 
 }
 
