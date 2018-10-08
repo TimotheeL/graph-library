@@ -74,6 +74,7 @@ void remove_neighbour(struct Neighbour *self) {
 	assert(self);
 	
 	self->nextNeighbour->previousNeighbour = self->previousNeighbour;
+	self->previousNeighbour->nextNeighbour = self->nextNeighbour;
 	
 	free(self);
 }

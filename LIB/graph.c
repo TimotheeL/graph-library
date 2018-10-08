@@ -11,7 +11,7 @@
 void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
 	self->isDirected = isDirected;
 	self->nbMaxNodes = nbMaxNodes;
-	self->adjList = NULL;
+	self->adjList = malloc(nbMaxNodes * sizeof(struct Neighbour));
 }
 
 /*
@@ -44,8 +44,19 @@ void add_node(struct Graph *self) {
  * Remove a node from a graph
  */
 void remove_node(struct Graph *self, int node) {
-	while () {
-		
+	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
+		struct Neighbour *curr = self->adjList[nbNodes];
+		if ((nbNodes+1) == node) {
+			destroy_neighbour(curr);
+		}
+		else {
+			while (curr != NULL) {
+				if (curr->neighbour == node) {
+					remove_neighbour(curr);
+				}
+				curr = curr->nextNeighbour;
+			}
+		}
 	}
 }
 
@@ -60,7 +71,7 @@ void add_edge() {
  * Remove an edge from the graph
  */
 void remove_edge() {
-
+	
 }
 
 /*
