@@ -1,3 +1,8 @@
+/*
+	PW2 - Graph Library Representation by Adjacency Lists
+	Thibault BERTIN - Timothée LAURENT
+	Master 1 CMI Informatique - TP1A
+*/
 #ifndef GRAPH_H
 #define GRAPH_H
 
