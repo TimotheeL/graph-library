@@ -51,12 +51,12 @@ void remove_node(struct Graph *self, int node);
 /*
  * Add an edge to a graph
  */
-void add_edge();
+void add_edge(struct Graph *self);
 
 /*
  * Remove an edge from the graph
  */
-void remove_edge();
+void remove_edge(struct Graph *self);
 
 /*
  * Display the graph on the standard output
