@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <assert.h>
 
+#include "list.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -44,7 +46,7 @@ void add_node(struct Graph *self);
 /*
  * Remove a node from a graph
  */
-void remove_node(struct Graph *self, struct Neighbour *self);
+void remove_node(struct Graph *self, int node);
 
 /*
  * Add an edge to a graph
@@ -64,7 +66,7 @@ void view_graph(const struct Graph *self);
 /*
  * Save the graph in a file
  */
-void save_graph();
+void save_graph(const struct Graph *self, const char *filename);
 
 /*
  * Exit the program
