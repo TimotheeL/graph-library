@@ -36,7 +36,7 @@ void destroy_graph(struct Graph *self);
 /*
  * Load graph from file
  */ 
-void load_graph();
+void load_graph(const char *filename);
 
 /*
  * Add a node to a graph
@@ -56,7 +56,7 @@ void add_edge(struct Graph *self);
 /*
  * Remove an edge from the graph
  */
-void remove_edge(struct Graph *self);
+void remove_edge(struct Graph *self, int nodeTail, int nodeHead);
 
 /*
  * Display the graph on the standard output
