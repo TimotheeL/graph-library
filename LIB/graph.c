@@ -9,6 +9,8 @@
  * Create an empty graph
  */
 void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
+	assert(self);
+	
 	self->isDirected = isDirected;
 	self->nbMaxNodes = nbMaxNodes;
 	self->adjList = malloc(nbMaxNodes * sizeof(struct Neighbour));
@@ -18,11 +20,13 @@ void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
  * Destroy a graph
  */
 void destroy_graph(struct Graph *self) {
+	assert(self);
+	
 	for (int nbNodes = 0; nbNodes < nbMaxNodes; nbNodes++) {
 		remove_node(self->adjList[nbNodes]);
 	}
 	
-	free(adjList);
+	free(self->adjList);
 	free(self);
 }
 
@@ -37,13 +41,15 @@ void load_graph() {
  * Add a node to a graph
  */
 void add_node(struct Graph *self) {
-
+	assert(self);
 }
 
 /*
  * Remove a node from a graph
  */
 void remove_node(struct Graph *self, int node) {
+	assert(self);
+	
 	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
 		struct Neighbour *curr = self->adjList[nbNodes];
 		if ((nbNodes+1) == node) {
@@ -53,6 +59,7 @@ void remove_node(struct Graph *self, int node) {
 			while (curr != NULL) {
 				if (curr->neighbour == node) {
 					remove_neighbour(curr);
+					break;
 				}
 				curr = curr->nextNeighbour;
 			}
@@ -63,15 +70,35 @@ void remove_node(struct Graph *self, int node) {
 /*
  * Add an edge to a graph
  */
-void add_edge() {
-
+void add_edge(struct Graph *self) {
+	assert(self);
 }
 
 /*
  * Remove an edge from the graph
  */
-void remove_edge() {
+void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
+	assert(self);
 	
+	struct Neighbour *curr = self->adjList[nodeTail];
+	while (curr != NULL) {
+		if (curr->neighbour == nodeHead) {
+			remove_neighbour(curr);
+			break;
+		}
+		curr = curr->nextNeighbour;
+	}
+
+	if (self->isDirected) {
+		curr = self->adjList[nodeHead];
+		while (curr != NULL) {
+			if (curr->neighbour == nodeTail) {
+				remove_neighbour(curr);
+				break;
+			}
+			curr = curr->nextNeighbour;
+		}
+	}
 }
 
 /*
