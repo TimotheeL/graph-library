@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <assert.h>
 
+#include "list.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -64,7 +66,7 @@ void view_graph(const struct Graph *self);
 /*
  * Save the graph in a file
  */
-void save_graph();
+void save_graph(const struct Graph *self, const char *filename);
 
 /*
  * Exit the program
