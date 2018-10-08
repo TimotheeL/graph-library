@@ -3,14 +3,14 @@
 /*
  * Create an empty graph
  */
-void graph_create(struct graph *self) {
+void graph_create(struct Graph *self) {
 
 }
 
 /*
  * Destroy a graph
  */
-void graph_destroy(struct graph *self) {
+void graph_destroy(struct Graph *self) {
 
 }
 

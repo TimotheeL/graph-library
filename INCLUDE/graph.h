@@ -8,15 +8,21 @@
 extern "C" {
 #endif
 
+struct Graph {
+	bool isDirected;
+	int nbMaxNodes;
+	struct Neighbour *adjList;
+};
+
 /*
  * Create an empty graph
  */
-void create_graph(struct graph *self);
+void create_graph(struct Graph *self);
 
 /*
  * Destroy a graph
  */
-void destroy_graph(struct graph *self);
+void destroy_graph(struct Graph *self);
 
 /*
  * Load graph from file

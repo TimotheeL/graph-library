@@ -24,7 +24,7 @@ void remove_all_neighbours(struct Neighbour *self, int direction) {
 	if (direction <= 0) {
 		remove_all_neighbours(self->previousNeighbour, -1);
 	}
-	if (direciton >= 0) {	
+	if (direction >= 0) {	
 		remove_all_neighbours(self->nextNeighbour, 1);
 	}
 	remove_neighbour(self);
@@ -64,5 +64,5 @@ void remove_neighbour(struct Neighbour *self) {
  * Get the size of the list of neighbours
  */
 size_t neighbour_size(const struct Neighbour *self) {
-
+	return 0;
 }
