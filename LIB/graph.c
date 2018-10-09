@@ -75,12 +75,12 @@ void add_node(struct Graph *self, int nbNode) {
 		fprintf(stderr, "Error: Can't add this node to this graph. Please choose a value >= 1");
 		exit(EXIT_FAILURE);
 	}
-	if (self->adjList[nbNode-1] != NULL) {
+	if (&self->adjList[nbNode-1] != NULL) {
 		fprintf(stderr, "Error: This node already exists in the graph. Please choose another value");
 		exit(EXIT_FAILURE);
 	}
 	
-	add_neighbourself->adjList[nbNode-1], -1, 0);
+	add_neighbour(&self->adjList[nbNode-1], -1, 0);
 }
 
 /*
