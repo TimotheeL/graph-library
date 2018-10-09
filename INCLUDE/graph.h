@@ -51,7 +51,7 @@ void remove_node(struct Graph *self, int node);
 /*
  * Add an edge to a graph
  */
-void add_edge(struct Graph *self);
+void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric);
 
 /*
  * Remove an edge from the graph

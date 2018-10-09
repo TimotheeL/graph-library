@@ -67,6 +67,8 @@ void load_graph(struct Graph *self, const char *filename) {
  */
 void add_node(struct Graph *self, int nbNode) {
 	assert(self);
+	
+	// Verifies that the node is not already in the graph and that the node's number is correct
 	if (nbNode > self->nbMaxNodes) {
 		fprintf(stderr, "Error: Can't add more than %d nodes to this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
 		exit(EXIT_FAILURE);
@@ -109,8 +111,40 @@ void remove_node(struct Graph *self, int node) {
 /*
  * Add an edge to a graph
  */
-void add_edge(struct Graph *self) {
+void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric) {
 	assert(self);
+	
+	// Verifies that both its endpoints are nodes of the graph and that the edge is not already in the graph
+	if (&self->adjList[nodeTail-1] == NULL) {
+		fprintf(stderr, "Error: The tail node doesn't exist in the graph. Please choose another node");
+		exit(EXIT_FAILURE);
+	}
+	if (&self->adjList[nodeHead-1] == NULL) {
+		fprintf(stderr, "Error: The head node doesn't exist in the graph. Please choose another node");
+		exit(EXIT_FAILURE);
+	}
+	
+	struct Neighbour *curr = &self->adjList[nodeTail - 1];
+	while (curr != NULL) {
+		if (curr->neighbour == nodeHead) {
+			fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value");
+			exit(EXIT_FAILURE);
+		}
+		curr = curr->nextNeighbour;
+	}
+	add_neighbour(&self->adjList[nodeTail-1], nodeHead, weight);
+
+	if (symmetric) {
+		struct Neighbour *curr = &self->adjList[nodeHead - 1];
+		while (curr != NULL) {
+			if (curr->neighbour == nodeTail) {
+				fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value");
+				exit(EXIT_FAILURE);
+			}
+			curr = curr->nextNeighbour;
+		}
+		add_neighbour(&self->adjList[nodeHead-1], nodeTail, weight);
+	}
 }
 
 /*
@@ -175,5 +209,5 @@ void save_graph(const struct Graph *self, const char *filename) {
  * Exit the program
  */
 void quit() {
-
+	
 }
