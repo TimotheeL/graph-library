@@ -36,7 +36,7 @@ void destroy_graph(struct Graph *self);
 /*
  * Load graph from file
  */ 
-void load_graph(const char *filename);
+void load_graph(struct Graph *self, const char *filename);
 
 /*
  * Add a node to a graph

@@ -32,8 +32,34 @@ void destroy_graph(struct Graph *self) {
 /*
  * Load graph from file
  */ 
-void load_graph(const char *filename) {
+void load_graph(struct Graph *self, const char *filename) {
+	/*FILE* f = fopen(filename, "r");
+	if (f == NULL) {
+		fprintf(stderr, "Error: couldn't open file \"%s\"", filename);
+		exit(EXIT_FAILURE);
+	}
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t read;
+	int instructionCount = 0;
+	int lineCount = 0;
+	int nbMaxNodes;
+	bool isDirected;
 	
+	while ((read = getline(&line, &len, fp)) != -1) {
+		lineCount++;
+		if (line[0] != "#")
+			instructionCount++;
+		if (instructionCount == 1) {
+			size_t n = strlen(line);
+			for (int i = 0; i < n; i++) {
+				if (!isdigit(line[i])) {
+					fprintf(stderr, "");
+				}
+			}
+		}
+	}
+	fclose(f);*/
 }
 
 /*
@@ -128,6 +154,7 @@ void save_graph(const struct Graph *self, const char *filename) {
 			}
 		}	
 	}
+	fclose(output);
 }
 
 /*
