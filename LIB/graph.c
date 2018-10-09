@@ -65,8 +65,22 @@ void load_graph(struct Graph *self, const char *filename) {
 /*
  * Add a node to a graph
  */
-void add_node(struct Graph *self) {
+void add_node(struct Graph *self, int nbNode) {
 	assert(self);
+	if (nbNode > self->nbMaxNodes) {
+		fprintf(stderr, "Error: Can't add more than %d nodes to this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
+		exit(EXIT_FAILURE);
+	}
+	if (nbNode < 1) {
+		fprintf(stderr, "Error: Can't add this node to this graph. Please choose a value >= 1");
+		exit(EXIT_FAILURE);
+	}
+	if (self->adjList[nbNode-1] != NULL) {
+		fprintf(stderr, "Error: This node already exists in the graph. Please choose another value");
+		exit(EXIT_FAILURE);
+	}
+	
+	add_neighbourself->adjList[nbNode-1], -1, 0);
 }
 
 /*

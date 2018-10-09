@@ -41,7 +41,7 @@ void load_graph(struct Graph *self, const char *filename);
 /*
  * Add a node to a graph
  */
-void add_node(struct Graph *self);
+void add_node(struct Graph *self, int nbNode);
 
 /*
  * Remove a node from a graph
