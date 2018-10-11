@@ -33,33 +33,48 @@ void destroy_graph(struct Graph *self) {
  * Load graph from file
  */ 
 void load_graph(struct Graph *self, const char *filename) {
-	/*FILE* f = fopen(filename, "r");
+	FILE* f = fopen(filename, "r");
 	if (f == NULL) {
-		fprintf(stderr, "Error: couldn't open file \"%s\"", filename);
+		fprintf(stderr, "Error: couldn't open file \"%s\"\n", filename);
 		exit(EXIT_FAILURE);
 	}
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	int instructionCount = 0;
-	int lineCount = 0;
 	int nbMaxNodes;
 	bool isDirected;
-	
+	int lineCount = 0;
+	int instructionCount = 0;	
+
 	while ((read = getline(&line, &len, fp)) != -1) {
 		lineCount++;
-		if (line[0] != "#")
+		if (line[0] != "#") {
 			instructionCount++;
-		if (instructionCount == 1) {
-			size_t n = strlen(line);
-			for (int i = 0; i < n; i++) {
-				if (!isdigit(line[i])) {
-					fprintf(stderr, "");
+			if (instructionCount == 1) {
+				size_t n = strlen(line);
+				for (int i = 0; i < n; i++) {
+					if (!isdigit(line[i])) {
+						fprintf(stderr, "Error: line %d: expected digits, found \"%c\"\n", lineCount, line[i]);
+						exit(EXIT_FAILURE);
+					}
+				}
+				nbMaxNodes = atoi(line);
+			} else if (instructionCount == 2) {
+				if (line[0] == 'y') {
+					isDirected = true;				
+				} else if (line[0] == 'n') {
+					isDirected = false;
+				} else {
+					fprintf(stderr, "Error: line %d: expected 'y' or 'n', found \"%c\" ", lineCount, line[0]);
+					exit(EXIT_FAILURE);
+				}
+				if (strlen(line) != 1) {
+					fprintf(stderr, "Warning: line %d: expected 'y' or 'n', found multiple characters. Only the first character was used", lineCount);
 				}
 			}
 		}
 	}
-	fclose(f);*/
+	fclose(f);
 }
 
 /*
