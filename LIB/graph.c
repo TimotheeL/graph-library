@@ -242,10 +242,3 @@ void save_graph(const struct Graph *self, const char *filename) {
 	}
 	fclose(output);
 }
-
-/*
- * Exit the program
- */
-void quit() {
-	
-}

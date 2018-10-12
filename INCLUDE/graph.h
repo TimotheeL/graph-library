@@ -68,11 +68,6 @@ void view_graph(const struct Graph *self);
  */
 void save_graph(const struct Graph *self, const char *filename);
 
-/*
- * Exit the program
- */
-void quit();
-
 #ifdef __cplusplus
 }
 #endif
