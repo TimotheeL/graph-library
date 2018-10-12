@@ -1,24 +1,23 @@
 CC=gcc
 CFLAGS= -Wall -O2 -g -std=c99
-SRCDIR=LIB
-INCLUDEDIR=INCLUDE
-SRC=$(SRCDIR)/*.c
-INCLUDE=$(INCLUDEDIR)/*.h
+LIBDIR=LIB/
+INCLUDEDIR=INCLUDE/
 OBJDIR=OBJ/
 BINDIR=BIN/
+SRCDIR=SRC/
 
 all: $(BINDIR)main
 
 $(BINDIR)main: $(OBJDIR)main.o  liblist.a libgraph.a
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(OBJDIR)main.o: main.c
+$(OBJDIR)main.o: $(SRCDIR)main.c
 	$(CC) -o $@ -c $(CFLAGS) $<
 
-list.o: $(SRCDIR)/list.c $(INCLUDEDIR)/list.h
+list.o: $(LIBDIR)list.c $(INCLUDEDIR)list.h
 	$(CC) -o $(OBJDIR)list.o -c $(CFLAGS) $<
 
-graph.o: $(SRCDIR)/graph.c $(INCLUDEDIR)/graph.h
+graph.o: $(LIBDIR)graph.c $(INCLUDEDIR)graph.h
 	$(CC) -o $(OBJDIR)graph.o -c $(CFLAGS) $<
 
 liblist.a: list.o
@@ -33,6 +32,5 @@ clean:
 mrproper: clean
 	rm -f liblist.a
 	rm -f libgraph.a
-	rm -f a.out
 	rm -f $(BINDIR)*
 
