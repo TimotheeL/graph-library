@@ -33,7 +33,7 @@ void destroy_graph(struct Graph *self) {
  * Load graph from file
  */ 
 void load_graph(struct Graph *self, const char *filename) {
-	FILE* f = fopen(filename, "r");
+/*	FILE* f = fopen(filename, "r");
 	if (f == NULL) {
 		fprintf(stderr, "Error: couldn't open file \"%s\"\n", filename);
 		exit(EXIT_FAILURE);
@@ -51,30 +51,53 @@ void load_graph(struct Graph *self, const char *filename) {
 		if (line[0] != "#") {
 			instructionCount++;
 			if (instructionCount == 1) {
-				size_t n = strlen(line);
-				for (int i = 0; i < n; i++) {
+				for (int i = 0; i < read - 1; i++) {
 					if (!isdigit(line[i])) {
-						fprintf(stderr, "Error: line %d: expected digits, found \"%c\"\n", lineCount, line[i]);
+						fprintf(stderr, "Error: in %s on line %d: expected digits, found \"%c\"\n", filename, lineCount, line[i]);
 						exit(EXIT_FAILURE);
 					}
 				}
 				nbMaxNodes = atoi(line);
 			} else if (instructionCount == 2) {
-				if (line[0] == 'y') {
-					isDirected = true;				
-				} else if (line[0] == 'n') {
-					isDirected = false;
-				} else {
-					fprintf(stderr, "Error: line %d: expected 'y' or 'n', found \"%c\" ", lineCount, line[0]);
+				switch (line[0]) {
+					case 'y': isDirected = true;break;
+					case 'n': isDirected = false;break;
+					default:
+						fprintf(stderr, "Error: in %s on line %d: expected 'y' or 'n', found \"%c\" ", filename, lineCount, line[0]);
+						exit(EXIT_FAILURE);				
+				}
+				if (read - 1 != 1) {
+					fprintf(stderr, "Warning: in %s on line %d: expected 'y' or 'n', found multiple characters. Only the first character was used", filename, lineCount);
+				}
+			} else {
+				char *part;
+				int c = 0;
+				int node;
+				char *neighbours;
+				part = strtok(line, ":");
+				while (part != NULL) {
+					switch (c) {
+						case 0:node = atoi(part);break;
+						case 1:neighbours = part;break;
+						default:
+							fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"", filename, lineCount);
+							exit(EXIT_FAILURE);
+					}
+					c++;
+				}
+				if (c == 0) {
+					fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"", filename, lineCount);
 					exit(EXIT_FAILURE);
 				}
-				if (strlen(line) != 1) {
-					fprintf(stderr, "Warning: line %d: expected 'y' or 'n', found multiple characters. Only the first character was used", lineCount);
+				part = strtok(neighbour, ", ");
+				while (part != NULL) {
+					
 				}
 			}
 		}
 	}
-	fclose(f);
+	free(line);
+	fclose(f);*/
 }
 
 /*
