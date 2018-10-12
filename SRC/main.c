@@ -7,6 +7,8 @@ int main() {
 	int gameFinish = 0;
 	int answerMain = 0;
 	
+	struct Graph *graph = malloc(sizeof(struct Graph));
+	
 	while (!gameFinish) {
 		do  {
 			printf("---MENU---");
@@ -25,6 +27,13 @@ int main() {
 		
 		switch (answerMain) {
 		case 1:
+			do  {
+				printf("How many ");
+				
+				// HUMAIN CHOISIR
+			} while (answerMain < 1 || answerMain > 9);
+			
+			create_graph(struct Graph *self, bool isDirected, int nbMaxNodes);
 			break;
 		case 2:
 			break;
@@ -41,6 +50,7 @@ int main() {
 		case 8:
 			break;
 		default:
+			destroy_graph(graph);
 			gameFinish = 1;
 			break;
 		}
