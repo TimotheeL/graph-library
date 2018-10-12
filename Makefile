@@ -5,14 +5,15 @@ INCLUDEDIR=INCLUDE
 SRC=$(SRCDIR)/*.c
 INCLUDE=$(INCLUDEDIR)/*.h
 OBJDIR=OBJ/
-TARGET=main
-all: main
+BINDIR=BIN/
 
-main: $(OBJDIR)main.o  liblist.a libgraph.a
+all: $(BINDIR)main
+
+$(BINDIR)main: $(OBJDIR)main.o  liblist.a libgraph.a
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(OBJDIR)main.o: main.c
-	$(CC) -o $(OBJDIR)main.o -c $(CFLAGS) $<
+	$(CC) -o $@ -c $(CFLAGS) $<
 
 list.o: $(SRCDIR)/list.c $(INCLUDEDIR)/list.h
 	$(CC) -o $(OBJDIR)list.o -c $(CFLAGS) $<
@@ -32,7 +33,6 @@ clean:
 mrproper: clean
 	rm -f liblist.a
 	rm -f libgraph.a
-	rm -f main
 	rm -f a.out
-
+	rm -f $(BINDIR)*
 
