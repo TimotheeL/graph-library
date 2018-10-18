@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "list.h"
 #ifdef __cplusplus

@@ -166,6 +166,20 @@ void add_node(struct Graph *self, int nbNode) {
 void remove_node(struct Graph *self, int node) {
 	assert(self);
 	
+	// Verifies that the node is in the graph and that the node's number is correct
+	if (node > self->nbMaxNodes) {
+		fprintf(stderr, "Error: This node isn't in the graph");
+		exit(EXIT_FAILURE);
+	}
+	if (node < 1) {
+		fprintf(stderr, "Error: This node isn't in the graph");
+		exit(EXIT_FAILURE);
+	}
+	if (&self->adjList[node-1] == NULL) {
+		fprintf(stderr, "Error: This node didn't exists in the graph. Please choose another value");
+		exit(EXIT_FAILURE);
+	}
+	
 	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
 		struct Neighbour *curr = &self->adjList[nbNodes];
 		if ((nbNodes + 1) == node) {
