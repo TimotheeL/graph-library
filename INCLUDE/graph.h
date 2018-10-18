@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <string.h>
 
 #include "list.h"
 #ifdef __cplusplus
