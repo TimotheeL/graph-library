@@ -50,7 +50,7 @@ long readLong() {
 }
 
 int main() {
-	bool finish = false; // To know if it's finish
+/*	bool finish = false; // To know if it's finish
 	long answerMain = 0; // Answer for the main menu
 	
 	struct Graph *graph = malloc(sizeof(struct Graph));
@@ -291,6 +291,9 @@ int main() {
 			break;
 		}
 	}
-	
+*/	
+	struct Graph *graph = malloc(sizeof(struct Graph));
+	load_graph(graph, "./test");
+	view_graph(graph);
 	return 0;
 }
