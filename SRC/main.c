@@ -39,9 +39,9 @@ int read(char *string, int length) {
 
 // To read a long in stdin
 long readLong() {
-	char TextNumber[100] = {0};
+	char TextNumber[1000] = {0};
 	
-	if (read(TextNumber, 100)) {
+	if (read(TextNumber, 1000)) {
 		return strtol(TextNumber, NULL, 10);
 	}
 	else {
@@ -97,14 +97,9 @@ int main() {
 			if (graph->adjList == NULL) {
 				char *filename = malloc(1000 * sizeof(struct char));
 				
-				long tmpChoice = 0;
 				do  {
 					printf("Write the name of the file : \n");
-					
-					if (read(filename, 1000)) {
-						tmpChoice = 1;
-					}
-				} while (tmpChoice != 1);
+				} while (!read(filename, 1000));
 				
 				load_graph(graph, filename);
 				
@@ -121,13 +116,13 @@ int main() {
 					
 					// Verifies that the node is not already in the graph and that the node's number is correct
 					if (nbNode > self->nbMaxNodes) {
-						printf("Error: Can't add more than %d nodes to this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
+						printf("Can't add more than %d nodes to this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
 					}
 					if (nbNode < 1) {
-						printf("Error: Can't add this node to this graph. Please choose a value >= 1");
+						printf("Can't add this node to this graph. Please choose a value >= 1");
 					}
-					if (&self->adjList[nbNode-1] != NULL) {
-						printf("Error: This node already exists in the graph. Please choose another value");
+					if (&graph->adjList[nbNode-1] != NULL) {
+						printf("This node already exists in the graph. Please choose another value");
 					}
 				} while ((nbNode > self->nbMaxNodes) || (nbNode < 1) || (&graph->adjList[nbNode-1] != NULL));
 				
@@ -136,7 +131,87 @@ int main() {
 			break;
 		case 4: // Add edge
 			if (graph->adjList != NULL) {
+				long nodeTail = 0;
+				long nodeHead = 0;
+				long weight = 0;
+				bool symmetric = false;
 				
+				bool alreadyCreate = false;
+				do {
+					alreadyCreate = false;
+					do  {
+						printf("Write the number of the tail node : \n");
+						
+						nodeTail = readLong();
+						
+						// Verifies that the tail node is in the graph
+						if (&graph->adjList[nodeTail-1] == NULL) {
+							printf("The tail node doesn't exist in the graph. Please choose another node");
+						}
+					} while (&graph->adjList[nodeTail-1] == NULL);
+					
+					do  {
+						printf("Write the number of the head node : \n");
+						
+						nodeHead = readLong();
+						
+						// Verifies that the head node is in the graph
+						if (&graph->adjList[nodeHead-1] == NULL) {
+							printf("The head node doesn't exist in the graph. Please choose another node");
+						}
+					} while (&graph->adjList[nodeHead-1] == NULL);
+					
+					if (graph->isDirected) {
+						long tmpChoice = 0;
+						do  {
+							printf("Do you want to add the corresponding symetric edge ? 1 for yes, 0 for no : \n");
+							
+							tmpChoice = readLong();
+						} while (tmpChoice != 0 || tmpChoice != 1);
+						symmetric = (tmpChoice == 1) ? true : false;
+					}
+					else {
+						symmetric = true;
+					}
+					
+					if (symmetric) {
+						struct Neighbour *curr = &graph->adjList[nodeTail - 1];
+						while (curr != NULL) {
+							if (curr->neighbour == nodeHead) {
+								printf("This edge already exists in the graph. Please choose another value");
+								alreadyCreate = true;
+							}
+							curr = curr->nextNeighbour;
+						}
+						
+						curr = &graph->adjList[nodeHead - 1];
+						while (curr != NULL) {
+							if (curr->neighbour == nodeTail) {
+								printf("This edge already exists in the graph. Please choose another value");
+								alreadyCreate = true;
+							}
+							curr = curr->nextNeighbour;
+						}
+					}
+					else {
+						struct Neighbour *curr = &graph->adjList[nodeTail - 1];
+						while (curr != NULL) {
+							if (curr->neighbour == nodeHead) {
+								printf("This edge already exists in the graph. Please choose another value");
+								alreadyCreate = true;
+							}
+							curr = curr->nextNeighbour;
+						}
+					}
+				} while (alreadyCreate);
+				
+				do  {
+					printf("Write the weight of the edge : \n");
+					
+					weight = readLong();
+				} while (weight < 0);
+				
+				add_edge(graph, nodeTail, nodeHead, weight, symmetric)
 			}
 			break;
 		case 5: // Remove node
@@ -149,13 +224,13 @@ int main() {
 					
 					// Verifies that the node is in the graph and that the node's number is correct
 					if (node > self->nbMaxNodes) {
-						fprintf("Error: This node isn't in the graph");
+						printf("This node isn't in the graph");
 					}
 					if (node < 1) {
-						fprintf("Error: This node isn't in the graph");
+						printf("This node isn't in the graph");
 					}
-					if (&self->adjList[node-1] == NULL) {
-						fprintf("Error: This node didn't exists in the graph. Please choose another value");
+					if (&graph->adjList[node-1] == NULL) {
+						printf("This node didn't exists in the graph. Please choose another value");
 					}
 				} while ((node > self->nbMaxNodes) || (node < 1) || (&graph->adjList[node-1] == NULL));
 				
@@ -164,17 +239,50 @@ int main() {
 			break;
 		case 6: // Remove edge
 			if (graph->adjList != NULL) {
+				long nodeTail = 0;
+				long nodeHead = 0;
 				
+				do  {
+					printf("Write the number of the tail node : \n");
+					
+					nodeTail = readLong();
+					
+					// Verifies that the tail node is in the graph
+					if (&graph->adjList[nodeTail-1] == NULL) {
+						printf("The tail node doesn't exist in the graph. Please choose another node");
+					}
+				} while (&graph->adjList[nodeTail-1] == NULL);
+				
+				do  {
+					printf("Write the number of the head node : \n");
+					
+					nodeHead = readLong();
+					
+					// Verifies that the head node is in the graph
+					if (&graph->adjList[nodeHead-1] == NULL) {
+						printf("The head node doesn't exist in the graph. Please choose another node");
+					}
+				} while (&graph->adjList[nodeHead-1] == NULL);
+				
+				remove_edge(graph, nodeTail, nodeHead);
 			}
 			break;
 		case 7: // View graph
 			if (graph->adjList != NULL) {
-				
+				view_graph(graph);
 			}
 			break;
 		case 8: // Save graph
 			if (graph->adjList != NULL) {
+				char *filename = malloc(1000 * sizeof(struct char));
 				
+				do  {
+					printf("Write the name of the file : \n");
+				} while (!read(filename, 1000));
+				
+				save_graph(graph, filename);
+				
+				free(filename);
 			}
 			break;
 		default: // Quit

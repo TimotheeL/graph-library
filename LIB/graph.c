@@ -205,6 +205,16 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	assert(self);
 	
+	// Verifies that both its endpoints are nodes of the graph
+	if (&self->adjList[nodeTail-1] == NULL) {
+		fprintf(stderr, "Error: The tail node doesn't exist in the graph. Please choose another node");
+		exit(EXIT_FAILURE);
+	}
+	if (&self->adjList[nodeHead-1] == NULL) {
+		fprintf(stderr, "Error: The head node doesn't exist in the graph. Please choose another node");
+		exit(EXIT_FAILURE);
+	}
+	
 	struct Neighbour *curr = &self->adjList[nodeTail - 1];
 	while (curr != NULL) {
 		if (curr->neighbour == nodeHead) {
