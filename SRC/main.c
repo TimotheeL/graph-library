@@ -16,7 +16,7 @@ void clearBuffer() {
 }
  
 // To read a string in stdin
-int read(char *string, int length) {
+int readString(char *string, int length) {
 	char *positionEntry = NULL;
 	
 	// We read the text entered on the keyboard
@@ -41,7 +41,7 @@ int read(char *string, int length) {
 long readLong() {
 	char TextNumber[1000] = {0};
 	
-	if (read(TextNumber, 1000)) {
+	if (readString(TextNumber, 1000)) {
 		return strtol(TextNumber, NULL, 10);
 	}
 	else {
@@ -95,11 +95,11 @@ int main() {
 			break;
 		case 2: // Load graph
 			if (graph->adjList == NULL) {
-				char *filename = malloc(1000 * sizeof(struct char));
+				char *filename = malloc(1000 * sizeof(char));
 				
-				do  {
+				do {
 					printf("Write the name of the file : \n");
-				} while (!read(filename, 1000));
+				} while (!readString(filename, 1000));
 				
 				load_graph(graph, filename);
 				
@@ -115,8 +115,8 @@ int main() {
 					nbNode = readLong();
 					
 					// Verifies that the node is not already in the graph and that the node's number is correct
-					if (nbNode > self->nbMaxNodes) {
-						printf("Can't add more than %d nodes to this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
+					if (nbNode > graph->nbMaxNodes) {
+						printf("Can't add more than %d nodes to this graph. Please choose a value <= %d", graph->nbMaxNodes, graph->nbMaxNodes);
 					}
 					if (nbNode < 1) {
 						printf("Can't add this node to this graph. Please choose a value >= 1");
@@ -124,7 +124,7 @@ int main() {
 					if (&graph->adjList[nbNode-1] != NULL) {
 						printf("This node already exists in the graph. Please choose another value");
 					}
-				} while ((nbNode > self->nbMaxNodes) || (nbNode < 1) || (&graph->adjList[nbNode-1] != NULL));
+				} while ((nbNode > graph->nbMaxNodes) || (nbNode < 1) || (&graph->adjList[nbNode-1] != NULL));
 				
 				add_node(graph, nbNode);
 			}
@@ -211,7 +211,7 @@ int main() {
 					weight = readLong();
 				} while (weight < 0);
 				
-				add_edge(graph, nodeTail, nodeHead, weight, symmetric)
+				add_edge(graph, nodeTail, nodeHead, weight, symmetric);
 			}
 			break;
 		case 5: // Remove node
@@ -223,7 +223,7 @@ int main() {
 					node = readLong();
 					
 					// Verifies that the node is in the graph and that the node's number is correct
-					if (node > self->nbMaxNodes) {
+					if (node > graph->nbMaxNodes) {
 						printf("This node isn't in the graph");
 					}
 					if (node < 1) {
@@ -232,7 +232,7 @@ int main() {
 					if (&graph->adjList[node-1] == NULL) {
 						printf("This node didn't exists in the graph. Please choose another value");
 					}
-				} while ((node > self->nbMaxNodes) || (node < 1) || (&graph->adjList[node-1] == NULL));
+				} while ((node > graph->nbMaxNodes) || (node < 1) || (&graph->adjList[node-1] == NULL));
 				
 				remove_node(graph, node);
 			}
@@ -274,11 +274,11 @@ int main() {
 			break;
 		case 8: // Save graph
 			if (graph->adjList != NULL) {
-				char *filename = malloc(1000 * sizeof(struct char));
+				char *filename = malloc(1000 * sizeof(char));
 				
 				do  {
 					printf("Write the name of the file : \n");
-				} while (!read(filename, 1000));
+				} while (!readString(filename, 1000));
 				
 				save_graph(graph, filename);
 				
