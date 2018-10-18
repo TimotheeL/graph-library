@@ -27,7 +27,7 @@ void create_neighbour(struct Neighbour *self, int neighbour, int weight) {
  */
 void destroy_neighbour_rec(struct Neighbour *self, int direction) {
 	if (!self) {
-		return;	
+		return;
 	}
 	if (direction <= 0) {
 		destroy_neighbour_rec(self->previousNeighbour, -1);
@@ -64,6 +64,7 @@ void add_neighbour(struct Neighbour *self, int neighbour, int weight) {
 		self->previousNeighbour->nextNeighbour = new;
 		new->previousNeighbour = self->previousNeighbour;
 		new->nextNeighbour = self;
+		self->previousNeighbour = new;
 	}
 }
 
