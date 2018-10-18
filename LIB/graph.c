@@ -22,7 +22,7 @@ void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
 void destroy_graph(struct Graph *self) {
 	assert(self);
 	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
-		remove_node(self, self->adjList[nbNodes].neighbour);
+		remove_node(self, nbNodes);
 	}
 
 	free(self->adjList);
@@ -145,15 +145,15 @@ void add_node(struct Graph *self, int nbNode) {
 	
 	// Verifies that the node is not already in the graph and that the node's number is correct
 	if (nbNode > self->nbMaxNodes) {
-		fprintf(stderr, "Error: Can't add more than %d nodes to this graph. Please choose a value <= %d", self->nbMaxNodes, self->nbMaxNodes);
+		fprintf(stderr, "Error: Can't add more than %d nodes to this graph. Please choose a value <= %d\n", self->nbMaxNodes, self->nbMaxNodes);
 		exit(EXIT_FAILURE);
 	}
 	if (nbNode < 1) {
-		fprintf(stderr, "Error: Can't add this node to this graph. Please choose a value >= 1");
+		fprintf(stderr, "Error: Can't add this node to this graph. Please choose a value >= 1\n");
 		exit(EXIT_FAILURE);
 	}
 	if (&self->adjList[nbNode-1] != NULL) {
-		fprintf(stderr, "Error: This node already exists in the graph. Please choose another value");
+		fprintf(stderr, "Error: This node already exists in the graph. Please choose another value\n");
 		exit(EXIT_FAILURE);
 	}
 	
@@ -168,15 +168,15 @@ void remove_node(struct Graph *self, int node) {
 	
 	// Verifies that the node is in the graph and that the node's number is correct
 	if (node > self->nbMaxNodes) {
-		fprintf(stderr, "Error: This node isn't in the graph");
+		fprintf(stderr, "Error: This node isn't in the graph\n");
 		exit(EXIT_FAILURE);
 	}
 	if (node < 1) {
-		fprintf(stderr, "Error: This node isn't in the graph");
+		fprintf(stderr, "Error: This node isn't in the graph\n");
 		exit(EXIT_FAILURE);
 	}
 	if (&self->adjList[node-1] == NULL) {
-		fprintf(stderr, "Error: This node didn't exists in the graph. Please choose another value");
+		fprintf(stderr, "Error: This node didn't exists in the graph. Please choose another value\n");
 		exit(EXIT_FAILURE);
 	}
 	
@@ -205,18 +205,18 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 	
 	// Verifies that both its endpoints are nodes of the graph and that the edge is not already in the graph
 	if (&self->adjList[nodeTail-1] == NULL) {
-		fprintf(stderr, "Error: The tail node doesn't exist in the graph. Please choose another node");
+		fprintf(stderr, "Error: The tail node doesn't exist in the graph. Please choose another node\n");
 		exit(EXIT_FAILURE);
 	}
 	if (&self->adjList[nodeHead-1] == NULL) {
-		fprintf(stderr, "Error: The head node doesn't exist in the graph. Please choose another node");
+		fprintf(stderr, "Error: The head node doesn't exist in the graph. Please choose another node\n");
 		exit(EXIT_FAILURE);
 	}
 	
 	struct Neighbour *curr = &self->adjList[nodeTail - 1];
 	while (curr != NULL) {
 		if (curr->neighbour == nodeHead) {
-			fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value");
+			fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value\n");
 			exit(EXIT_FAILURE);
 		}
 		curr = curr->nextNeighbour;
@@ -227,7 +227,7 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 		struct Neighbour *curr = &self->adjList[nodeHead - 1];
 		while (curr != NULL) {
 			if (curr->neighbour == nodeTail) {
-				fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value");
+				fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value\n");
 				exit(EXIT_FAILURE);
 			}
 			curr = curr->nextNeighbour;
@@ -244,11 +244,11 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	
 	// Verifies that both its endpoints are nodes of the graph
 	if (&self->adjList[nodeTail-1] == NULL) {
-		fprintf(stderr, "Error: The tail node doesn't exist in the graph. Please choose another node");
+		fprintf(stderr, "Error: The tail node doesn't exist in the graph. Please choose another node\n");
 		exit(EXIT_FAILURE);
 	}
 	if (&self->adjList[nodeHead-1] == NULL) {
-		fprintf(stderr, "Error: The head node doesn't exist in the graph. Please choose another node");
+		fprintf(stderr, "Error: The head node doesn't exist in the graph. Please choose another node\n");
 		exit(EXIT_FAILURE);
 	}
 	
