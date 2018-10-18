@@ -8,11 +8,8 @@ SRCDIR=SRC/
 
 all: $(BINDIR)main
 
-$(BINDIR)main: $(OBJDIR)main.o  liblist.a libgraph.a
-	$(CC) $(CFLAGS) -o $@ $<
-
-$(OBJDIR)main.o: $(SRCDIR)main.c
-	$(CC) -o $@ -c $(CFLAGS) $<
+$(BINDIR)main: $(SRCDIR)main.c liblist.a libgraph.a
+	$(CC) $(CFLAGS) $^ -o $@ -L. -llist -lgraph
 
 list.o: $(LIBDIR)list.c $(INCLUDEDIR)list.h
 	$(CC) -o $(OBJDIR)list.o -c $(CFLAGS) $<

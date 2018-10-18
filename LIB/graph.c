@@ -33,7 +33,7 @@ void destroy_graph(struct Graph *self) {
  * Load graph from file
  */ 
 void load_graph(struct Graph *self, const char *filename) {
-/*	FILE* f = fopen(filename, "r");
+	FILE* f = fopen(filename, "r");
 	if (f == NULL) {
 		fprintf(stderr, "Error: couldn't open file \"%s\"\n", filename);
 		exit(EXIT_FAILURE);
@@ -41,63 +41,100 @@ void load_graph(struct Graph *self, const char *filename) {
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	int nbMaxNodes;
+	int nbMaxNodes = -1;
 	bool isDirected;
 	int lineCount = 0;
-	int instructionCount = 0;	
-
-	while ((read = getline(&line, &len, fp)) != -1) {
+	int instructionCount = 0;
+	char *part = NULL;
+	char *part2 = NULL;
+	int c = 0;
+	int node = -1;
+	char *neighbours = NULL;
+	// Read the file line by line
+	while ((read = getline(&line, &len, f)) != -1) {
+		// Count the number of lines for error display purposes		
 		lineCount++;
-		if (line[0] != "#") {
-			instructionCount++;
-			if (instructionCount == 1) {
-				for (int i = 0; i < read - 1; i++) {
-					if (!isdigit(line[i])) {
-						fprintf(stderr, "Error: in %s on line %d: expected digits, found \"%c\"\n", filename, lineCount, line[i]);
-						exit(EXIT_FAILURE);
-					}
-				}
-				nbMaxNodes = atoi(line);
-			} else if (instructionCount == 2) {
-				switch (line[0]) {
-					case 'y': isDirected = true;break;
-					case 'n': isDirected = false;break;
-					default:
-						fprintf(stderr, "Error: in %s on line %d: expected 'y' or 'n', found \"%c\" ", filename, lineCount, line[0]);
-						exit(EXIT_FAILURE);				
-				}
-				if (read - 1 != 1) {
-					fprintf(stderr, "Warning: in %s on line %d: expected 'y' or 'n', found multiple characters. Only the first character was used", filename, lineCount);
-				}
-			} else {
-				char *part;
-				int c = 0;
-				int node;
-				char *neighbours;
-				part = strtok(line, ":");
-				while (part != NULL) {
-					switch (c) {
-						case 0:node = atoi(part);break;
-						case 1:neighbours = part;break;
-						default:
-							fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"", filename, lineCount);
+		// Ignore lines starting with '#' (we consider they are comments)
+		if (line[0] != '#') {
+			// Count the number of instructions to determine what we are expected to find
+			instructionCount++; 
+			switch(instructionCount) {
+				case 1: // On first instruction, we get the number max of nodes
+					for (int i = 0; i < read - 1; i++) {
+						if (!isdigit(line[i])) {
+							fprintf(stderr, "Error: in %s on line %d: expected digits, found \"%c\"\n", filename, lineCount, line[i]);
 							exit(EXIT_FAILURE);
+						}
 					}
-					c++;
-				}
-				if (c == 0) {
-					fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"", filename, lineCount);
-					exit(EXIT_FAILURE);
-				}
-				part = strtok(neighbour, ", ");
-				while (part != NULL) {
+					nbMaxNodes = atoi(line);
+					if (nbMaxNodes < 1) {
+						fprintf(stderr, "Error: in %s on line %d: the max number of nodes can't be negative\n", filename, lineCount);
+						exit(EXIT_FAILURE);					
+					}
+					break;
+				case 2: // On second instruction, we get the boolean that says whether the graph is directed or not
+					switch (line[0]) {
+						case 'y': isDirected = true;break;
+						case 'n': isDirected = false;break;
+						default:
+							fprintf(stderr, "Error: in %s on line %d: expected 'y' or 'n', found \"%c\"\n", filename, lineCount, line[0]);
+							exit(EXIT_FAILURE);				
+					}
+					if (read - 1 != 1) {
+						fprintf(stderr, "Warning: in %s on line %d: expected 'y' or 'n', found multiple characters. Only the first character was used\n", filename, lineCount);
+					}
+					create_graph(self, isDirected, nbMaxNodes);break;
+				default: // The last lines represent the adjacency list
+					part = strtok(line, ":");
+					while (part != NULL) {
+						switch (c) {
+							case 0:
+								node = atoi(part);break;
+							case 1:
+								neighbours = part;break;
+							default:
+								fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"\n", filename, lineCount);
+								exit(EXIT_FAILURE);
+						}
+						c++;
+						part = strtok(NULL, ":");
+					}
+					c = 0;
+					if (node < 0) {
+						fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"\nnode, neighbour and weight must be positive integers.\n", filename, lineCount);
+						exit(EXIT_FAILURE);					
+					}
+					part = strtok(neighbours, ", ");
+	
+					do {
+						fprintf(stderr, "%s\n", part);
+						part2 = strtok(part, "(/)");
+						
+						int neigh = -1, weight = -1;
+						while (part2 != NULL) {
+							switch (c) {
+								case 0: neigh = atoi(part2);break;
+								default: weight = atoi(part2);
+							}
+							c++;
+							part2 = strtok(NULL, "(/)");
+						}
+						c = 0;
+						if (neigh < 0 || weight < 0) {
+							fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"\nnode, neighbour and weight must be positive integers.\n", filename, lineCount);
+							exit(EXIT_FAILURE);							
+						}
+						fprintf(stderr, "%d: %d, %d\n", node, neigh, weight);
+						add_edge(self, node, neigh, weight, false);
+						
+						part = strtok(NULL, ", ");
+					} while (part != NULL);
 					
-				}
 			}
 		}
 	}
 	free(line);
-	fclose(f);*/
+	fclose(f);
 }
 
 /*
@@ -226,7 +263,7 @@ void view_graph(const struct Graph *self) {
 void save_graph(const struct Graph *self, const char *filename) {
 	assert(self);
 	FILE *output = (filename[0] == ':' ? stdout : fopen(filename, "w"));
-	fprintf(output, "# maximum number of nodes\n%d\n# directed", self->nbMaxNodes);
+	fprintf(output, "# maximum number of nodes\n%d\n# directed\n", self->nbMaxNodes);
 	fprintf(output, self->isDirected ? "y" : "n"); 
 	fprintf(output, "\n# node: neighbours\n");
 	for (int i = 0; i < self->nbMaxNodes; i++) {
@@ -234,7 +271,7 @@ void save_graph(const struct Graph *self, const char *filename) {
 			fprintf(output, "%d: ", i);
 			struct Neighbour *curr = &self->adjList[i];
 			while (curr) {
-				fprintf(output, "(%d/%d)",curr->neighbour, curr->weight);
+				fprintf(output, "(%d/%d)", curr->neighbour, curr->weight);
 				fprintf(output, curr->nextNeighbour ? ", " : "\n");
 				curr = curr->nextNeighbour;
 			}
