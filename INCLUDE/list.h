@@ -17,7 +17,6 @@ struct Neighbour {
 	int neighbour;
 	int weight;
 	struct Neighbour *nextNeighbour;
-	struct Neighbour *previousNeighbour;
 };
 
 /*
@@ -43,6 +42,6 @@ void remove_neighbour(struct Neighbour *self);
 /*
  * Get the size of the list of neighbours
  */
-size_t neighbour_size(const struct Neighbour *self);
+size_t neighbour_size(struct Neighbour *self);
 
 #endif // LIST_H

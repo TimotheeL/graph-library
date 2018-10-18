@@ -11,8 +11,6 @@
  */
 void create_neighbour(struct Neighbour *self, int neighbour, int weight) {
 	assert(self);
-	
-	self->previousNeighbour = NULL;
 	self->nextNeighbour = NULL;
 	self->neighbour = neighbour;
 	self->weight = weight;
@@ -20,21 +18,12 @@ void create_neighbour(struct Neighbour *self, int neighbour, int weight) {
 
 /*
  * Recursively remove all neighbours
- * direction indicates the direction to follow to avoid useless recursive calls :
- * direciton == 0 	-> call recursively on previous and next neighbours
- * direction  > 0 	-> call recursively on next neighbours
- * direction  < 0	-> call recursively on previous neighbours
  */
-void destroy_neighbour_rec(struct Neighbour *self, int direction) {
+void destroy_neighbour_rec(struct Neighbour *self) {
 	if (!self) {
 		return;
-	}
-	if (direction <= 0) {
-		destroy_neighbour_rec(self->previousNeighbour, -1);
-	}
-	if (direction >= 0) {	
-		destroy_neighbour_rec(self->nextNeighbour, 1);
-	}
+	}	
+	destroy_neighbour_rec(self->nextNeighbour);
 	remove_neighbour(self);
 }
 
@@ -43,8 +32,7 @@ void destroy_neighbour_rec(struct Neighbour *self, int direction) {
  */
 void destroy_neighbour(struct Neighbour *self) {
 	assert(self);
-	
-	destroy_neighbour_rec(self, 0);
+	destroy_neighbour_rec(self);
 }
 
 /*
@@ -52,62 +40,34 @@ void destroy_neighbour(struct Neighbour *self) {
  */
 void add_neighbour(struct Neighbour *self, int neighbour, int weight) {
 	assert(self);
-	
 	struct Neighbour *new = malloc(sizeof(struct Neighbour));
-	create_neighbour(new, neighbour, weight);
-	
-	if (!self->previousNeighbour) {
-		self->previousNeighbour = new;
-		new->nextNeighbour = self;
-	}
-	else {
-		self->previousNeighbour->nextNeighbour = new;
-		new->previousNeighbour = self->previousNeighbour;
-		new->nextNeighbour = self;
-		self->previousNeighbour = new;
-	}
+	new->weight = weight;
+	new->neighbour = neighbour;
+	new->nextNeighbour = self;
+	self = new;
 }
 
 /*
  * Remove a neighbour
  */ 
 void remove_neighbour(struct Neighbour *self) {
-	assert(self);
-	
-	self->nextNeighbour->previousNeighbour = self->previousNeighbour;
-	self->previousNeighbour->nextNeighbour = self->nextNeighbour;
-	
-	free(self);
-}
-
-/*
- * Recursively count all neighbours
- * direction indicates the direction to follow to avoid useless recursive calls :
- * direciton == 0 	-> call recursively on previous and next neighbours
- * direction  > 0 	-> call recursively on next neighbours
- * direction  < 0	-> call recursively on previous neighbours
- */
-void neighbour_size_rec(const struct Neighbour *self, size_t *neighbourSize, int direction) {
-	if (!self) {
-		return;	
-	}
-	if (direction <= 0) {
-		neighbour_size_rec(self, neighbourSize, -1);
-	}
-	if (direction >= 0) {	
-		neighbour_size_rec(self, neighbourSize, 1);
-	}
-	(*neighbourSize)++;
+	assert(self);	
+	self = self->nextNeighbour;
+		free(self);
 }
 
 /*
  * Get the size of the list of neighbours
  */
-size_t neighbour_size(const struct Neighbour *self) {
+size_t neighbour_size(struct Neighbour *self) {
 	assert(self);
 	
 	size_t neighbourSize = 0;
-	neighbour_size_rec(self, &neighbourSize, 0);
+	struct Neighbour *curr = self;
+	while(curr) {
+		neighbourSize++;
+		curr = curr->nextNeighbour;
+	}
 	
 	return neighbourSize;
 }
