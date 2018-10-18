@@ -251,7 +251,7 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	struct Neighbour *curr = &self->adjList[nodeTail - 1];
 	while (curr != NULL) {
 		if (curr->neighbour == nodeHead) {
-			remove_neighbour(curr);
+			remove_neighbour(&curr);
 			break;
 		}
 		curr = curr->nextNeighbour;
@@ -261,7 +261,7 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 		curr = &self->adjList[nodeHead - 1];
 		while (curr != NULL) {
 			if (curr->neighbour == nodeTail) {
-				remove_neighbour(curr);
+				remove_neighbour(&curr);
 				break;
 			}
 			curr = curr->nextNeighbour;

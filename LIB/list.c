@@ -17,50 +17,47 @@ void create_neighbour(struct Neighbour *self, int neighbour, int weight) {
 }
 
 /*
- * Recursively remove all neighbours
- */
-void destroy_neighbour_rec(struct Neighbour *self) {
-	if (!self) {
-		return;
-	}	
-	destroy_neighbour_rec(self->nextNeighbour);
-	remove_neighbour(self);
-}
-
-/*
  * Destroy every neighbour from a list
  */
-void destroy_neighbour(struct Neighbour *self) {
+void destroy_neighbour(struct Neighbour **self) {
 	assert(self);
-	destroy_neighbour_rec(self);
+	struct Neighbour *curr = *self;
+	struct Neighbour *next;
+	while (curr) {
+		next = curr->nextNeighbour;
+		free(curr);
+		curr = next;
+	}
+	*self = NULL;
 }
 
 /*
  * Add an element in front of a neighbour
  */
-void add_neighbour(struct Neighbour *self, int neighbour, int weight) {
+void add_neighbour(struct Neighbour **self, int neighbour, int weight) {
 	assert(self);
 	struct Neighbour *new = malloc(sizeof(struct Neighbour));
 	new->weight = weight;
 	new->neighbour = neighbour;
-	new->nextNeighbour = self;
-	self = new;
+	new->nextNeighbour = (*self);
+	(*self) = new;
 }
 
 /*
  * Remove a neighbour
  */ 
-void remove_neighbour(struct Neighbour *self) {
-	assert(self);	
-	self = self->nextNeighbour;
-		free(self);
+void remove_neighbour(struct Neighbour **self) {
+	assert(self);
+	struct Neighbour *tmp = *self;	
+	(*self) = tmp->nextNeighbour;
+	free(tmp);
 }
 
 /*
  * Get the size of the list of neighbours
  */
 size_t neighbour_size(struct Neighbour *self) {
-	assert(self);
+	if (!self) return 0;
 	
 	size_t neighbourSize = 0;
 	struct Neighbour *curr = self;

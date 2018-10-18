@@ -27,17 +27,17 @@ void create_neighbour(struct Neighbour *self, int neighbour, int weight);
 /*
  * Destroy every neighbour from a list
  */
-void destroy_neighbour(struct Neighbour *self);
+void destroy_neighbour(struct Neighbour **self);
 
 /*
  * Add an element in front of a neighbour
  */
-void add_neighbour(struct Neighbour *self, int neighbour, int weight);
+void add_neighbour(struct Neighbour **self, int neighbour, int weight);
 
 /*
  * Remove a neighbour
  */ 
-void remove_neighbour(struct Neighbour *self);
+void remove_neighbour(struct Neighbour **self);
 
 /*
  * Get the size of the list of neighbours
