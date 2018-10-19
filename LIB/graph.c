@@ -9,20 +9,24 @@
  * Create an empty graph
  */
 void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
-	assert(self);
-	
+	assert(self);	
 	self->isDirected = isDirected;
 	self->nbMaxNodes = nbMaxNodes;
-	self->adjList = malloc(nbMaxNodes * sizeof(struct Neighbour));
-}
+	self->adjList = malloc(sizeof(struct Neighbour) * nbMaxNodes);
+	for (int i = 0; i < nbMaxNodes; i++) {
+		self->adjList[i] = NULL;
+	}
+}	
 
 /*
  * Destroy a graph
  */
 void destroy_graph(struct Graph *self) {
 	assert(self);
-	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
-		remove_node(self, nbNodes);
+	for (int i = 0; i < self->nbMaxNodes; i++) {
+		if (self->adjList[i]) {
+			remove_node(self, i+1);
+		}
 	}
 
 	free(self->adjList);
@@ -136,24 +140,26 @@ void load_graph(struct Graph *self, const char *filename) {
 /*
  * Add a node to a graph
  */
-void add_node(struct Graph *self, int nbNode) {
+void add_node(struct Graph *self, int node) {
 	assert(self);
 	
 	// Verifies that the node is not already in the graph and that the node's number is correct
-	if (nbNode > self->nbMaxNodes) {
+	if (node > self->nbMaxNodes) {
 		fprintf(stderr, "Error: Can't add more than %d nodes to this graph. Please choose a value <= %d\n", self->nbMaxNodes, self->nbMaxNodes);
 		exit(EXIT_FAILURE);
 	}
-	if (nbNode < 1) {
+	if (node < 1) {
 		fprintf(stderr, "Error: Can't add this node to this graph. Please choose a value >= 1\n");
 		exit(EXIT_FAILURE);
 	}
-	if (&self->adjList[nbNode-1] != NULL) {
+	if (self->adjList[node-1] != NULL) {
 		fprintf(stderr, "Error: This node already exists in the graph. Please choose another value\n");
 		exit(EXIT_FAILURE);
 	}
-	
-	add_neighbour(&self->adjList[nbNode-1], -1, 0);
+	struct Neighbour *neigh = malloc(sizeof(struct Neighbour));
+	create_neighbour(neigh, -1, 0);
+	self->adjList[node-1] = neigh;
+	printf("added node %d\n", node);
 }
 
 /*
@@ -163,41 +169,24 @@ void remove_node(struct Graph *self, int node) {
 	assert(self);
 	
 	// Verifies that the node is in the graph and that the node's number is correct
-	if (node > self->nbMaxNodes) {
+	if (node > self->nbMaxNodes || node < 1) {
 		fprintf(stderr, "Error: This node isn't in the graph\n");
 		exit(EXIT_FAILURE);
 	}
-	if (node < 1) {
-		fprintf(stderr, "Error: This node isn't in the graph\n");
-		exit(EXIT_FAILURE);
-	}
-	if (&self->adjList[node-1] == NULL) {
+
+	if (self->adjList[node-1] == NULL) {
 		fprintf(stderr, "Error: This node didn't exists in the graph. Please choose another value\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	for (int nbNodes = 0; nbNodes < self->nbMaxNodes; nbNodes++) {
-		struct Neighbour *curr = &self->adjList[nbNodes];
-		if ((nbNodes + 1) == node) {
-			destroy_neighbour(curr);
-		}
-		else {
-			while (curr != NULL) {
-				if (curr->neighbour == node) {
-					remove_neighbour(curr);
-					break;
-				}
-				curr = curr->nextNeighbour;
-			}
-		}
-	}
+	destroy_neighbour(&self->adjList[node-1]);
 }
 
 /*
  * Add an edge to a graph
  */
 void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric) {
-	assert(self);
+/*	assert(self);
 	
 	// Checks that both its endpoints are nodes of the graph and that the edge is not already in the graph
 	if (&self->adjList[nodeTail-1] == NULL) {
@@ -229,14 +218,14 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 			curr = curr->nextNeighbour;
 		}
 		add_neighbour(&self->adjList[nodeHead-1], nodeTail, weight);
-	}
+	}*/
 }
 
 /*
  * Remove an edge from the graph
  */
 void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
-	assert(self);
+	/*assert(self);
 	
 	// Verifies that both its endpoints are nodes of the graph
 	if (&self->adjList[nodeTail-1] == NULL) {
@@ -266,7 +255,7 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 			}
 			curr = curr->nextNeighbour;
 		}
-	}
+	}*/
 }
 
 /*
@@ -287,13 +276,17 @@ void save_graph(const struct Graph *self, const char *filename) {
 	fprintf(output, self->isDirected ? "y" : "n"); 
 	fprintf(output, "\n# node: neighbours\n");
 	for (int i = 0; i < self->nbMaxNodes; i++) {
-		if (&self->adjList[i] != NULL) {
+		if (self->adjList[i] != NULL) {
 			fprintf(output, "%d: ", i+1);
-			struct Neighbour *curr = &self->adjList[i];
-			while (curr) {
-				fprintf(output, "(%d/%d)", curr->neighbour, curr->weight);
-				fprintf(output, curr->nextNeighbour ? ", " : "\n");
-				curr = curr->nextNeighbour;
+			if (self->adjList[i]->neighbour != -1) {
+				struct Neighbour *curr = self->adjList[i];
+				while (curr) {
+					fprintf(output, "(%d/%d)", curr->neighbour, curr->weight);
+					fprintf(output, curr->nextNeighbour ? ", " : "\n");
+					curr = curr->nextNeighbour;
+				}
+			} else {
+				printf("\n");			
 			}
 		}	
 	}

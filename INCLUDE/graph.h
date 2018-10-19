@@ -24,7 +24,7 @@ extern "C" {
 struct Graph {
 	bool isDirected;
 	int nbMaxNodes;
-	struct Neighbour *adjList;
+	struct Neighbour **adjList;
 };
 
 /*
