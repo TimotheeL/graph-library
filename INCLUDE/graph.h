@@ -6,16 +6,6 @@
 */
 #ifndef GRAPH_H
 #define GRAPH_H
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <assert.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <ctype.h>
-#include <string.h>
 
 #include "list.h"
 #ifdef __cplusplus

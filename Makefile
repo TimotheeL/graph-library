@@ -6,10 +6,10 @@ OBJDIR=OBJ/
 BINDIR=BIN/
 SRCDIR=SRC/
 
-all: $(BINDIR)main
+all: $(BINDIR)main 
 
-$(BINDIR)main: $(SRCDIR)main.c liblist.a libgraph.a
-	$(CC) $(CFLAGS) $^ -o $@ -L. -llist -lgraph
+$(BINDIR)main: $(SRCDIR)main.c liblist.a libgraph.a libmenu.a
+	$(CC) $(CFLAGS) $^ -o $@ -L. -llist -lgraph -lmenu
 
 list.o: $(LIBDIR)list.c $(INCLUDEDIR)list.h
 	$(CC) -o $(OBJDIR)list.o -c $(CFLAGS) $<
@@ -17,11 +17,17 @@ list.o: $(LIBDIR)list.c $(INCLUDEDIR)list.h
 graph.o: $(LIBDIR)graph.c $(INCLUDEDIR)graph.h
 	$(CC) -o $(OBJDIR)graph.o -c $(CFLAGS) $<
 
+menu.o: $(LIBDIR)menu.c $(INCLUDEDIR)menu.h
+	$(CC) -o $(OBJDIR)menu.o -c $(CFLAGS) $<
+
 liblist.a: list.o
 	ar cr $@ $(OBJDIR)list.o
 	
 libgraph.a: graph.o
 	ar cr $@ $(OBJDIR)graph.o
+	
+libmenu.a: menu.o
+	ar cr $@ $(OBJDIR)menu.o
 
 clean:
 	rm -f $(OBJDIR)*
@@ -29,5 +35,6 @@ clean:
 mrproper: clean
 	rm -f liblist.a
 	rm -f libgraph.a
+	rm -f libmenu.a
 	rm -f $(BINDIR)*
 

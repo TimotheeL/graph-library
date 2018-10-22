@@ -4,6 +4,7 @@
 	Thibault BERTIN - Timothée LAURENT
 	Master 1 CMI Informatique - TP1A
 */
+#define _GNU_SOURCE
 #include "../INCLUDE/graph.h"
 
 /*
