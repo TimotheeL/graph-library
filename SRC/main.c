@@ -90,9 +90,9 @@ int main() {
 					tmpChoice = read_long();
 				} while (tmpChoice != 0 && tmpChoice != 1);
 				create_graph(graph, (tmpChoice == 1) ? true : false, nbMaxNodes);
-				printf("Your graph was created with success!\n");
+				printf("Your graph was created with success!\n\n");
 			} else {
-				printf("Please first destroy your current graph before creating a new graph\n");
+				printf("Please first destroy your current graph before creating a new one\n\n");
 			}
 			break;
 		case 2: // Load graph
@@ -103,12 +103,12 @@ int main() {
 					printf("Write the name of the file (relative path from the root directory of this project) : \n");
 				} while (!read_string(filename, 1000));
 				
-				if (load_graph(graph, filename) == 0) printf("Your graph was loaded with success!\n");
+				if (load_graph(graph, filename) == 0) printf("Your graph was loaded with success!\n\n");
 				
 				free(filename);
 			}
 			else {
-				printf("Please first destroy your current graph before loading a new graph\n");
+				printf("Please first destroy your current graph before loading a new one\n\n");
 			}
 			break;
 		case 3: // Add node
@@ -121,14 +121,14 @@ int main() {
 					
 					// Verifies that the node is not already in the graph and that the node's number is correct
 					if (nbNode > graph->nbMaxNodes || nbNode < 1) {
-						printf("Please choose a value between 1 and %d\n", graph->nbMaxNodes);
+						printf("Please choose a value between 1 and %d\n\n", graph->nbMaxNodes);
 					}
 					if (graph->adjList[nbNode-1] != NULL) {
-						printf("This node already exists in the graph. Please choose another value\n");
+						printf("This node already exists in the graph. Please choose another value\n\n");
 					}
 				} while ((nbNode > graph->nbMaxNodes) || (nbNode < 1) || (graph->adjList[nbNode-1] != NULL));
 				
-				if (add_node(graph, nbNode)) printf("The node %ld was added to the graph with success!\n", nbNode);
+				if (add_node(graph, nbNode) == 0) printf("The node %ld was added to the graph with success!\n\n", nbNode);
 				
 			} else {
 				printf("Please create or load a graph first\n");
@@ -144,7 +144,7 @@ int main() {
 				bool alreadyCreated = false;
 				
 				if (get_node_number(graph) == 0) {
-					printf("There are no nodes in the graph. Please insert nodes before inserting edges\n");
+					printf("There are no nodes in the graph. Please insert nodes before inserting edges\n\n");
 				}
 				else {
 					do {
@@ -156,7 +156,7 @@ int main() {
 							
 							// Verifies that the tail node is in the graph
 							if (graph->adjList[nodeTail-1] == NULL) {
-								printf("The tail node doesn't exist in the graph. Please choose another node\n");
+								printf("The tail node doesn't exist in the graph. Please choose another node\n\n");
 							}
 						} while (graph->adjList[nodeTail-1] == NULL);
 						
@@ -167,7 +167,7 @@ int main() {
 							
 							// Verifies that the head node is in the graph
 							if (graph->adjList[nodeHead-1] == NULL) {
-								printf("The head node doesn't exist in the graph. Please choose another node\n");
+								printf("The head node doesn't exist in the graph. Please choose another node\n\n");
 							}
 						} while (graph->adjList[nodeHead-1] == NULL);
 						
@@ -187,7 +187,7 @@ int main() {
 						struct Neighbour *curr = graph->adjList[nodeTail - 1];
 						while (curr != NULL) {
 							if (curr->neighbour == nodeHead) {
-								printf("This edge already exists in the graph. Please choose another value\n");
+								printf("This edge already exists in the graph. Please choose another value\n\n");
 								alreadyCreated = true;
 							}
 							curr = curr->nextNeighbour;
@@ -197,7 +197,7 @@ int main() {
 							struct Neighbour *curr = graph->adjList[nodeHead - 1];
 							while (curr != NULL) {
 								if (curr->neighbour == nodeTail) {
-									printf("This edge already exists in the graph. Please choose another value\n");
+									printf("This edge already exists in the graph. Please choose another value\n\n");
 									alreadyCreated = true;
 								}
 								curr = curr->nextNeighbour;
@@ -210,15 +210,15 @@ int main() {
 						
 						weight = read_long();
 					} while (weight < 0);
-					if (add_edge(graph, nodeTail, nodeHead, weight, symmetric)) printf("The edge %ld: (%ld/%ld) was added to the graph with success!\n", nodeTail, nodeHead, weight);
+					if (add_edge(graph, nodeTail, nodeHead, weight, symmetric)) printf("The edge %ld: (%ld/%ld) was added to the graph with success!\n\n", nodeTail, nodeHead, weight);
 				}
 			} else {
-				printf("Please create or load a graph first\n");
+				printf("Please create or load a graph first\n\n");
 			}
 			break;
 		case 5: // Remove node
 			if (get_node_number(graph) == 0) {
-				printf("There are no nodes in the graph\n");
+				printf("There are no nodes in the graph\n\n");
 			}
 			else if (graph->adjList != NULL) {
 				long node = 0;
@@ -229,18 +229,18 @@ int main() {
 					
 					// Verifies that the node is in the graph and that the node's number is correct
 					if (node > graph->nbMaxNodes || node < 1 || graph->adjList[node-1] == NULL) {
-						printf("This node isn't in the graph\n");
+						printf("This node isn't in the graph\n\n");
 					}
 				} while ((node > graph->nbMaxNodes) || (node < 1) || (graph->adjList[node-1] == NULL));
 				
-				if (remove_node(graph, node)) printf("The node %ld was removed from the graph with success!\n", node);
+				if (remove_node(graph, node)) printf("The node %ld was removed from the graph with success!\n\n", node);
 			} else {
-				printf("Please create or load a graph first\n");
+				printf("Please create or load a graph first\n\n");
 			}
 			break;
 		case 6: // Remove edge
 			if (get_node_number(graph) == 0) {
-				printf("There are no edges in the graph\n");
+				printf("There are no edges in the graph\n\n");
 			}
 			else if (graph->adjList != NULL) {
 				long nodeTail = 0;
@@ -253,7 +253,7 @@ int main() {
 					
 					// Verifies that the tail node is in the graph
 					if (graph->adjList[nodeTail-1] == NULL) {
-						printf("The tail node doesn't exist in the graph. Please choose another node\n");
+						printf("The tail node doesn't exist in the graph. Please choose another node\n\n");
 					}
 				} while (graph->adjList[nodeTail-1] == NULL);
 				
@@ -264,20 +264,20 @@ int main() {
 					
 					// Verifies that the head node is in the graph
 					if (graph->adjList[nodeHead-1] == NULL) {
-						printf("The head node doesn't exist in the graph. Please choose another node\n");
+						printf("The head node doesn't exist in the graph. Please choose another node\n\n");
 					}
 				} while (graph->adjList[nodeHead-1] == NULL);
 				
-				if (remove_edge(graph, nodeTail, nodeHead) == 0) printf("The edge was successfully removed from the graph!");
+				if (remove_edge(graph, nodeTail, nodeHead) == 0) printf("The edge was successfully removed from the graph!\n\n");
 			} else {
-				printf("Please create or load a graph first\n");
+				printf("Please create or load a graph first\n\n");
 			}
 			break;
 		case 7: // View graph
 			if (graph->adjList != NULL) {
 				view_graph(graph);
 			} else {
-				printf("Please create or load a graph first\n");
+				printf("Please create or load a graph first\n\n");
 			}
 			break;
 		case 8: // Save graph
@@ -289,10 +289,10 @@ int main() {
 				} while (!read_string(filename, 1000));
 				
 				save_graph(graph, filename);
-				printf("The graph was successfully saved into %s", filename);
+				printf("The graph was successfully saved into %s\n\n", filename);
 				free(filename);
 			} else {
-				printf("Please create or load a graph first\n");
+				printf("Please create or load a graph first\n\n");
 			}
 			break;
 		case 9: // Quit
@@ -314,6 +314,5 @@ int main() {
 			break;
 		}
 	}
-	
 	return 0;
 }

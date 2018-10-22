@@ -298,7 +298,7 @@ int remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 		curr = curr->nextNeighbour;
 	}
 	
-	if (self->isDirected) {
+	if (!self->isDirected) {
 		curr = self->adjList[nodeHead - 1];
 		while (curr) {
 			if (curr->neighbour == nodeTail) {
