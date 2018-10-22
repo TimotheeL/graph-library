@@ -50,6 +50,7 @@ long readLong() {
 }
 
 int main() {
+	/*
 	bool finish = false; // To know if it's finish
 	long answerMain = 0; // Answer for the main menu
 	
@@ -287,7 +288,7 @@ int main() {
 		default:
 			break;
 		}
-	}
+	}*/
 
 	struct Graph *graph = malloc(sizeof(struct Graph));
 	//create_graph(graph, false, 10);
@@ -310,9 +311,14 @@ int main() {
 	view_graph(graph);
 	//remove_edge(graph, 1, 4);
 	remove_edge(graph, 1, 3);
-	view_graph(graph);
+	*/
+	load_graph(graph, "test");
+	save_graph(graph, "test1");
 	destroy_graph(graph);
-	graph = NULL;*/
+	graph = NULL;
+	graph = malloc(sizeof(struct Graph));
+	load_graph(graph, "test1");
+	view_graph(graph);
 	/*struct Neighbour *neigh = malloc(sizeof(struct Neighbour));
 	create_neighbour(neigh, 4, 5);
 	add_neighbour(&neigh, 3, 2);
