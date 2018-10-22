@@ -1,12 +1,19 @@
 /*
 	PW2 - Graph Library Representation by Adjacency Lists
+	graph.h
 	Thibault BERTIN - Timothée LAURENT
 	Master 1 CMI Informatique - TP1A
 */
 #include "../INCLUDE/graph.h"
 
 /*
- * Create an empty graph
+ * Create an empty graph"
+ * Params:
+ * - Graph *self: the graph you wish to create
+ * - bool isDirected: true if the graph is directed
+ * - int nbMaxNodes: the maximum number of nodes the graph can have
+ * Return:
+ * - void
  */
 void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
 	assert(self);	
@@ -20,6 +27,10 @@ void create_graph(struct Graph *self, bool isDirected, int nbMaxNodes) {
 
 /*
  * Destroy a graph
+ * Params:
+ * - Graph *self: the graph you wish to destroy
+ * Return:
+ * - void
  */
 void destroy_graph(struct Graph *self) {
 	assert(self);
@@ -36,8 +47,13 @@ void destroy_graph(struct Graph *self) {
 }
 
 /*
- * Load graph from file
- */ 
+ * Load a graph from a file
+ * Params:
+ * - Graph *self: the graph structure in which to load the saved graph
+ * - char *filename: the file from which you wish to load a graph
+ * Return:
+ * - void
+ */
 void load_graph(struct Graph *self, const char *filename) {
 	FILE* f = fopen(filename, "r");
 	if (!f) {
@@ -160,6 +176,11 @@ void load_graph(struct Graph *self, const char *filename) {
 
 /*
  * Add a node to a graph
+ * Params:
+ * - Graph *self: the graph in which you wish to add a node 
+ *
+ * Return:
+ * - void
  */
 void add_node(struct Graph *self, int node) {
 	assert(self);
@@ -184,6 +205,11 @@ void add_node(struct Graph *self, int node) {
 
 /*
  * Remove a node from a graph
+ * Params:
+ * - Graph *self: the graph from which you wish to remove a node
+ * - int node: the node you wish to remove
+ * Return:
+ * - void
  */
 void remove_node(struct Graph *self, int node) {
 	assert(self);
@@ -199,6 +225,14 @@ void remove_node(struct Graph *self, int node) {
 
 /*
  * Add an edge to a graph
+ * Params:
+ * - Graph *self: the graph in which you wish to add an edge
+ * - int nodeTail: the node from which the edge starts
+ * - int nodeHead: the node to which the edge arrives
+ * - int weight: the weight of the edge
+ * - bool symmetric: symmetric edge is added if true
+ * Return:
+ * - void
  */
 void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric) {
 	assert(self);
@@ -235,7 +269,13 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 }
 
 /*
- * Remove an edge from the graph
+ * Remove an edge from a graph
+ * Params:
+ * - Graph *self: the graph from which you wish to remove an edge
+ * - int nodeTail: the node from which the edge starts
+ * - int nodeHead: the node to which the edge arrives
+ * Return:
+ * - void
  */
 void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	assert(self);
@@ -267,14 +307,23 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 }
 
 /*
- * Display the graph on the standard output
+ * Display a graph on the standard output
+ * Params:
+ * - Graph *self: the graph you wish to view
+ * Return:
+ * - void
  */
 void view_graph(const struct Graph *self) {
 	save_graph(self, ":");
 }
 
 /*
- * Save the graph in a file
+ * Save a graph in a file
+ * Params:
+ * - Graph *self: the graph you wish to save
+ * - char *filename : the filename in which to save the file. ':' for stdout
+ * Return:
+ * - void
  */
 void save_graph(const struct Graph *self, const char *filename) {
 	assert(self);
@@ -299,4 +348,21 @@ void save_graph(const struct Graph *self, const char *filename) {
 		}
 	}
 	if (filename[0] != ':') fclose(output);
+}
+
+/*
+ * Get the number of nodes in a graph
+ * Params:
+ * - Graph *self: Graph from which you wish to get the number of nodes
+ * Return:
+ * - int N the number of nodes in the graph
+ */
+size_t get_node_number(const struct Graph *self) {
+	size_t n = 0;
+	for (int i = 0; i < self->nbMaxNodes; i++) {
+		if (self->adjList[i]) {
+			n++;
+		}
+	}
+	return n;
 }
