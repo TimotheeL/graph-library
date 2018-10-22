@@ -58,7 +58,7 @@ void add_neighbour(struct Neighbour **self, int neighbour, int weight);
  * Return:
  * - void
  */ 
-void remove_neighbour(struct Neighbour **self);
+void remove_neighbour(struct Neighbour *self);
 
 /*
  * Get the size of the list of neighbours
