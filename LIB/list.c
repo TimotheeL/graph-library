@@ -66,13 +66,15 @@ void add_neighbour(struct Neighbour **self, int neighbour, int weight) {
  * - Neighbour **self: the neighbour you wish to remove
  * Return:
  * - void
- */ 
-void remove_neighbour(struct Neighbour **self) {
+ */
+void remove_neighbour(struct Neighbour *self) {
 	assert(self);
-	struct Neighbour *tmp = *self;	
-	(*self) = tmp->nextNeighbour;
-	free(tmp);
-	tmp = NULL;
+	
+	struct Neighbour *next = self->nextNeighbour;
+	self->nextNeighbour = next->nextNeighbour;
+	self->neighbour = next->neighbour;
+	self->weight = next->weight;
+	free(next);
 }
 
 /*
