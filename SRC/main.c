@@ -297,7 +297,37 @@ int main() {
 	}
 */	
 	struct Graph *graph = malloc(sizeof(struct Graph));
-	load_graph(graph, "./test");
+	//create_graph(graph, false, 10);
+	add_node(graph, 1);
+	add_node(graph, 3);
+	remove_node(graph, 3);
+	add_node(graph, 3);
+	add_node(graph, 4);
+	add_edge(graph, 1, 3, 2, false);
+	add_edge(graph, 1, 4, 3, true);
+	//remove_edge(graph, 1, 4);
+	load_graph(graph, "test");
 	view_graph(graph);
+	destroy_graph(graph);
+	graph = NULL;
+	/*struct Neighbour *neigh = malloc(sizeof(struct Neighbour));
+	create_neighbour(neigh, 4, 5);
+	add_neighbour(&neigh, 3, 2);
+	add_neighbour(&neigh, 5, 1);
+	add_neighbour(&neigh, 3, 3);
+	add_neighbour(&neigh, 9, 7);
+	remove_neighbour(&neigh);
+	remove_neighbour(&neigh);
+	remove_neighbour(&neigh);
+	remove_neighbour(&neigh);
+	struct Neighbour *curr = neigh;
+	while (curr) {
+		printf("%d, %d\n", curr->neighbour, curr->weight);
+		curr = curr->nextNeighbour;	
+	}
+	destroy_neighbour(&neigh);
+	neigh = NULL;*/
+	//load_graph(graph, "./test");
+	
 	return 0;
 }
