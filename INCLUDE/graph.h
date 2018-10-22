@@ -1,5 +1,6 @@
 /*
 	PW2 - Graph Library Representation by Adjacency Lists
+	graph.h
 	Thibault BERTIN - Timothée LAURENT
 	Master 1 CMI Informatique - TP1A
 */
@@ -125,9 +126,9 @@ void save_graph(const struct Graph *self, const char *filename);
  * Params:
  * - Graph self : the graph from which you wish to get the number of nodes
  * Return:
- * - int N the number of nodes in the graph
+ * - size_t N the number of nodes in the graph
  */
-int get_node_number(const struct Graph *self);
+size_t get_node_number(const struct Graph *self);
 
 #ifdef __cplusplus
 }
