@@ -217,7 +217,7 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 		}
 		curr = curr->nextNeighbour;
 	}
-	if (symmetric) {
+	if (nodeTail != nodeHead && symmetric) {
 		struct Neighbour *curr = self->adjList[nodeHead - 1];
 		while (curr != NULL) {
 			if (curr->neighbour == nodeTail) {
@@ -229,6 +229,9 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 		add_neighbour(&self->adjList[nodeHead-1], nodeTail, weight);
 	}
 	add_neighbour(&self->adjList[nodeTail-1], nodeHead, weight);
+	if (nodeTail == nodeHead && symmetric && !self->isDirected) {
+		fprintf(stderr, "Warning: Symmetric was not created because this is a self-loop\n");	
+	}
 }
 
 /*
