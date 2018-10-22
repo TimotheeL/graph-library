@@ -304,13 +304,10 @@ int remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 		return -1;
 	}
 	
-	bool remove = false;
-	
 	struct Neighbour *curr = self->adjList[nodeTail - 1];
 	while (curr) {
 		if (curr->neighbour == nodeHead) {
 			remove_neighbour(curr);
-			remove = true;
 		}
 		curr = curr->nextNeighbour;
 	}
@@ -320,18 +317,11 @@ int remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 		while (curr) {
 			if (curr->neighbour == nodeTail) {
 				remove_neighbour(curr);
-				remove = true;
 			}
 			curr = curr->nextNeighbour;
 		}
 	}
-	
-	if (remove) {
-		return 0;
-	}
-	else {
-		return -1;
-	}
+	return 0;
 }
 
 /*
