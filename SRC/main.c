@@ -7,7 +7,7 @@
 #include "../INCLUDE/graph.h"
 
 // To clear the buffer
-void clearBuffer() {
+void clear_buffer() {
 	int c = 0;
 	
 	while (c != '\n' && c != EOF) {
@@ -16,7 +16,7 @@ void clearBuffer() {
 }
  
 // To read a string in stdin
-int readString(char *string, int length) {
+int read_string(char *string, int length) {
 	char *positionEntry = NULL;
 	
 	// We read the text entered on the keyboard
@@ -27,21 +27,21 @@ int readString(char *string, int length) {
 			*positionEntry = '\0';
 		}
 		else {
-			clearBuffer();
+			clear_buffer();
 		}
 		return 1; // We return 1 if the function ran without error
 	}
 	else {
-		clearBuffer();
+		clear_buffer();
 		return 0; // We return 0 if the function ran with error
 	}
 }
 
 // To read a long in stdin
-long readLong() {
+long read_long() {
 	char TextNumber[1000] = {0};
 	
-	if (readString(TextNumber, 1000)) {
+	if (read_string(TextNumber, 1000)) {
 		return strtol(TextNumber, NULL, 10);
 	}
 	else {
@@ -68,7 +68,7 @@ int main() {
 			printf("8. Save graph\n");
 			printf("9. Quit\n");
 			
-			answerMain = readLong();
+			answerMain = read_long();
 		} while (answerMain < 1 || answerMain > 9);
 		
 		switch (answerMain) {
@@ -78,7 +78,7 @@ int main() {
 				do  {
 					printf("Write a number for the maximum node's number of your graph : \n");
 					
-					nbMaxNodes = readLong();
+					nbMaxNodes = read_long();
 				} while (nbMaxNodes < 1);
 				
 				bool isDirected = false;
@@ -86,7 +86,7 @@ int main() {
 				do  {
 					printf("Is your graph directed ? 1 for yes, 0 for no : \n");
 					
-					tmpChoice = readLong();
+					tmpChoice = read_long();
 				} while (tmpChoice != 0 && tmpChoice != 1);
 				isDirected = (tmpChoice == 1) ? true : false;
 				
@@ -99,7 +99,7 @@ int main() {
 				
 				do {
 					printf("Write the name of the file : \n");
-				} while (!readString(filename, 1000));
+				} while (!read_string(filename, 1000));
 				
 				load_graph(graph, filename);
 				
@@ -112,7 +112,7 @@ int main() {
 				do  {
 					printf("Write the number of the node you want insert : \n");
 					
-					nbNode = readLong();
+					nbNode = read_long();
 					
 					// Verifies that the node is not already in the graph and that the node's number is correct
 					if (nbNode > graph->nbMaxNodes) {
@@ -137,71 +137,77 @@ int main() {
 				bool symmetric = false;
 				
 				bool alreadyCreate = false;
-				do {
-					alreadyCreate = false;
-					do  {
-						printf("Write the number of the tail node : \n");
-						
-						nodeTail = readLong();
-						
-						// Verifies that the tail node is in the graph
-						if (graph->adjList[nodeTail-1] == NULL) {
-							printf("The tail node doesn't exist in the graph. Please choose another node\n");
-						}
-					} while (graph->adjList[nodeTail-1] == NULL);
-					
-					do  {
-						printf("Write the number of the head node : \n");
-						
-						nodeHead = readLong();
-						
-						// Verifies that the head node is in the graph
-						if (graph->adjList[nodeHead-1] == NULL) {
-							printf("The head node doesn't exist in the graph. Please choose another node\n");
-						}
-					} while (graph->adjList[nodeHead-1] == NULL);
-					
-					if (graph->isDirected) {
-						long tmpChoice = 0;
+				
+				if (get_node_number(graph) > 0) {
+					printf("There is no node in the grpah\n");
+				}
+				else {
+					do {
+						alreadyCreate = false;
 						do  {
-							printf("Do you want to add the corresponding symetric edge ? 1 for yes, 0 for no : \n");
+							printf("Write the number of the tail node : \n");
 							
-							tmpChoice = readLong();
-						} while (tmpChoice != 0 && tmpChoice != 1);
-						symmetric = (tmpChoice == 1) ? true : false;
-					}
-					else {
-						symmetric = true;
-					}
-					
-					struct Neighbour *curr = graph->adjList[nodeTail - 1];
-					while (curr != NULL) {
-						if (curr->neighbour == nodeHead) {
-							printf("This edge already exists in the graph. Please choose another value\n");
-							alreadyCreate = true;
+							nodeTail = read_long();
+							
+							// Verifies that the tail node is in the graph
+							if (graph->adjList[nodeTail-1] == NULL) {
+								printf("The tail node doesn't exist in the graph. Please choose another node\n");
+							}
+						} while (graph->adjList[nodeTail-1] == NULL);
+						
+						do  {
+							printf("Write the number of the head node : \n");
+							
+							nodeHead = read_long();
+							
+							// Verifies that the head node is in the graph
+							if (graph->adjList[nodeHead-1] == NULL) {
+								printf("The head node doesn't exist in the graph. Please choose another node\n");
+							}
+						} while (graph->adjList[nodeHead-1] == NULL);
+						
+						if (graph->isDirected) {
+							long tmpChoice = 0;
+							do  {
+								printf("Do you want to add the corresponding symetric edge ? 1 for yes, 0 for no : \n");
+								
+								tmpChoice = read_long();
+							} while (tmpChoice != 0 && tmpChoice != 1);
+							symmetric = (tmpChoice == 1) ? true : false;
 						}
-						curr = curr->nextNeighbour;
-					}
-					
-					if (symmetric) {
-						struct Neighbour *curr = graph->adjList[nodeHead - 1];
+						else {
+							symmetric = true;
+						}
+						
+						struct Neighbour *curr = graph->adjList[nodeTail - 1];
 						while (curr != NULL) {
-							if (curr->neighbour == nodeTail) {
+							if (curr->neighbour == nodeHead) {
 								printf("This edge already exists in the graph. Please choose another value\n");
 								alreadyCreate = true;
 							}
 							curr = curr->nextNeighbour;
 						}
-					}
-				} while (alreadyCreate);
-				
-				do  {
-					printf("Write the weight of the edge : \n");
+						
+						if (symmetric) {
+							struct Neighbour *curr = graph->adjList[nodeHead - 1];
+							while (curr != NULL) {
+								if (curr->neighbour == nodeTail) {
+									printf("This edge already exists in the graph. Please choose another value\n");
+									alreadyCreate = true;
+								}
+								curr = curr->nextNeighbour;
+							}
+						}
+					} while (alreadyCreate);
 					
-					weight = readLong();
-				} while (weight < 0);
-				
-				add_edge(graph, nodeTail, nodeHead, weight, symmetric);
+					do  {
+						printf("Write the weight of the edge : \n");
+						
+						weight = read_long();
+					} while (weight < 0);
+					
+					add_edge(graph, nodeTail, nodeHead, weight, symmetric);
+				}
 			}
 			break;
 		case 5: // Remove node
@@ -210,7 +216,7 @@ int main() {
 				do  {
 					printf("Write the number of the node you want remove : \n");
 					
-					node = readLong();
+					node = read_long();
 					
 					// Verifies that the node is in the graph and that the node's number is correct
 					if (node > graph->nbMaxNodes) {
@@ -235,7 +241,7 @@ int main() {
 				do {
 					printf("Write the number of the tail node : \n");
 					
-					nodeTail = readLong();
+					nodeTail = read_long();
 					
 					// Verifies that the tail node is in the graph
 					if (graph->adjList[nodeTail-1] == NULL) {
@@ -246,7 +252,7 @@ int main() {
 				do {
 					printf("Write the number of the head node : \n");
 					
-					nodeHead = readLong();
+					nodeHead = read_long();
 					
 					// Verifies that the head node is in the graph
 					if (graph->adjList[nodeHead-1] == NULL) {
@@ -268,7 +274,7 @@ int main() {
 				
 				do  {
 					printf("Write the name of the file : \n");
-				} while (!readString(filename, 1000));
+				} while (!read_string(filename, 1000));
 				
 				save_graph(graph, filename);
 				
@@ -288,6 +294,5 @@ int main() {
 			break;
 		}
 	}
-
 	return 0;
 }
