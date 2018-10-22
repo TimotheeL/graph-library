@@ -278,6 +278,7 @@ void view_graph(const struct Graph *self) {
  */
 void save_graph(const struct Graph *self, const char *filename) {
 	assert(self);
+	
 	FILE *output = (filename[0] == ':' ? stdout : fopen(filename, "w"));
 	fprintf(output, "# maximum number of nodes\n%d\n# directed\n", self->nbMaxNodes);
 	fprintf(output, self->isDirected ? "y" : "n"); 
