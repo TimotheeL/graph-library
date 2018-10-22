@@ -30,7 +30,9 @@ void destroy_graph(struct Graph *self) {
 	}
 
 	free(self->adjList);
+	self->adjList = NULL;
 	free(self);
+	self = NULL;
 }
 
 /*
@@ -134,6 +136,7 @@ void load_graph(struct Graph *self, const char *filename) {
 		}
 	}
 	free(line);
+	line = NULL;
 	fclose(f);
 }
 
@@ -238,18 +241,18 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	}
 	
 	struct Neighbour *curr = self->adjList[nodeTail - 1];
-	while (curr != NULL) {
+	while (curr) {
 		if (curr->neighbour == nodeHead) {
-			remove_neighbour(curr);
+			remove_neighbour(&curr);
 		}
 		curr = curr->nextNeighbour;
 	}
 	
 	if (self->isDirected) {
 		curr = self->adjList[nodeHead - 1];
-		while (curr != NULL) {
+		while (curr) {
 			if (curr->neighbour == nodeTail) {
-				remove_neighbour(curr);
+				remove_neighbour(&curr);
 			}
 			curr = curr->nextNeighbour;
 		}
@@ -260,7 +263,6 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
  * Display the graph on the standard output
  */
 void view_graph(const struct Graph *self) {
-	assert(self);
 	save_graph(self, ":");
 }
 
@@ -288,5 +290,5 @@ void save_graph(const struct Graph *self, const char *filename) {
 			}
 		}
 	}
-	fclose(output);
+	if (filename[0] != ':') fclose(output);
 }
