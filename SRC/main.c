@@ -50,7 +50,7 @@ long readLong() {
 }
 
 int main() {
-/*	bool finish = false; // To know if it's finish
+	bool finish = false; // To know if it's finish
 	long answerMain = 0; // Answer for the main menu
 	
 	struct Graph *graph = malloc(sizeof(struct Graph));
@@ -121,10 +121,10 @@ int main() {
 					if (nbNode < 1) {
 						printf("Can't add this node to this graph. Please choose a value >= 1\n");
 					}
-					if (&graph->adjList[nbNode-1] != NULL) {
+					if (graph->adjList[nbNode-1] != NULL) {
 						printf("This node already exists in the graph. Please choose another value\n");
 					}
-				} while ((nbNode > graph->nbMaxNodes) || (nbNode < 1) || (&graph->adjList[nbNode-1] != NULL));
+				} while ((nbNode > graph->nbMaxNodes) || (nbNode < 1) || (graph->adjList[nbNode-1] != NULL));
 				
 				add_node(graph, nbNode);
 			}
@@ -145,10 +145,10 @@ int main() {
 						nodeTail = readLong();
 						
 						// Verifies that the tail node is in the graph
-						if (&graph->adjList[nodeTail-1] == NULL) {
+						if (graph->adjList[nodeTail-1] == NULL) {
 							printf("The tail node doesn't exist in the graph. Please choose another node\n");
 						}
-					} while (&graph->adjList[nodeTail-1] == NULL);
+					} while (graph->adjList[nodeTail-1] == NULL);
 					
 					do  {
 						printf("Write the number of the head node : \n");
@@ -156,10 +156,10 @@ int main() {
 						nodeHead = readLong();
 						
 						// Verifies that the head node is in the graph
-						if (&graph->adjList[nodeHead-1] == NULL) {
+						if (graph->adjList[nodeHead-1] == NULL) {
 							printf("The head node doesn't exist in the graph. Please choose another node\n");
 						}
-					} while (&graph->adjList[nodeHead-1] == NULL);
+					} while (graph->adjList[nodeHead-1] == NULL);
 					
 					if (graph->isDirected) {
 						long tmpChoice = 0;
@@ -174,29 +174,19 @@ int main() {
 						symmetric = true;
 					}
 					
-					if (symmetric) {
-						struct Neighbour *curr = &graph->adjList[nodeTail - 1];
-						while (curr != NULL) {
-							if (curr->neighbour == nodeHead) {
-								printf("This edge already exists in the graph. Please choose another value\n");
-								alreadyCreate = true;
-							}
-							curr = curr->nextNeighbour;
+					struct Neighbour *curr = graph->adjList[nodeTail - 1];
+					while (curr != NULL) {
+						if (curr->neighbour == nodeHead) {
+							printf("This edge already exists in the graph. Please choose another value\n");
+							alreadyCreate = true;
 						}
-						
-						curr = &graph->adjList[nodeHead - 1];
+						curr = curr->nextNeighbour;
+					}
+					
+					if (symmetric) {
+						struct Neighbour *curr = graph->adjList[nodeHead - 1];
 						while (curr != NULL) {
 							if (curr->neighbour == nodeTail) {
-								printf("This edge already exists in the graph. Please choose another value\n");
-								alreadyCreate = true;
-							}
-							curr = curr->nextNeighbour;
-						}
-					}
-					else {
-						struct Neighbour *curr = &graph->adjList[nodeTail - 1];
-						while (curr != NULL) {
-							if (curr->neighbour == nodeHead) {
 								printf("This edge already exists in the graph. Please choose another value\n");
 								alreadyCreate = true;
 							}
@@ -229,10 +219,10 @@ int main() {
 					if (node < 1) {
 						printf("This node isn't in the graph\n");
 					}
-					if (&graph->adjList[node-1] == NULL) {
-						printf("This node didn't exists in the graph. Please choose another value\n");
+					if (graph->adjList[node-1] == NULL) {
+						printf("This node doesn't exist in the graph. Please choose another value\n");
 					}
-				} while ((node > graph->nbMaxNodes) || (node < 1) || (&graph->adjList[node-1] == NULL));
+				} while ((node > graph->nbMaxNodes) || (node < 1) || (graph->adjList[node-1] == NULL));
 				
 				remove_node(graph, node);
 			}
@@ -242,27 +232,27 @@ int main() {
 				long nodeTail = 0;
 				long nodeHead = 0;
 				
-				do  {
+				do {
 					printf("Write the number of the tail node : \n");
 					
 					nodeTail = readLong();
 					
 					// Verifies that the tail node is in the graph
-					if (&graph->adjList[nodeTail-1] == NULL) {
+					if (graph->adjList[nodeTail-1] == NULL) {
 						printf("The tail node doesn't exist in the graph. Please choose another node\n");
 					}
-				} while (&graph->adjList[nodeTail-1] == NULL);
+				} while (graph->adjList[nodeTail-1] == NULL);
 				
-				do  {
+				do {
 					printf("Write the number of the head node : \n");
 					
 					nodeHead = readLong();
 					
 					// Verifies that the head node is in the graph
-					if (&graph->adjList[nodeHead-1] == NULL) {
+					if (graph->adjList[nodeHead-1] == NULL) {
 						printf("The head node doesn't exist in the graph. Please choose another node\n");
 					}
-				} while (&graph->adjList[nodeHead-1] == NULL);
+				} while (graph->adjList[nodeHead-1] == NULL);
 				
 				remove_edge(graph, nodeTail, nodeHead);
 			}
@@ -289,27 +279,40 @@ int main() {
 			if (graph->adjList != NULL) {
 				destroy_graph(graph);
 			}
+			else {
+				free(graph);
+			}
 			finish = true;
 			break;
 		default:
 			break;
 		}
 	}
-*/	
+
 	struct Graph *graph = malloc(sizeof(struct Graph));
 	//create_graph(graph, false, 10);
-	/*add_node(graph, 1);
+	//add_node(graph, 1);
+
+	/*struct Graph *graph = malloc(sizeof(struct Graph));
+	create_graph(graph, false, 10);
+	add_node(graph, 1);
 	add_node(graph, 3);
 	remove_node(graph, 3);
 	add_node(graph, 3);
 	add_node(graph, 4);
 	add_edge(graph, 1, 3, 2, false);
 	add_edge(graph, 1, 4, 3, true);
-	//remove_edge(graph, 1, 4);*/
+	//remove_edge(graph, 1, 4);
 	load_graph(graph, "test");
 	view_graph(graph);
 	//destroy_graph(graph);
 	graph = NULL;
+	view_graph(graph);
+	//remove_edge(graph, 1, 4);
+	remove_edge(graph, 1, 3);
+	view_graph(graph);
+	destroy_graph(graph);
+	graph = NULL;*/
 	/*struct Neighbour *neigh = malloc(sizeof(struct Neighbour));
 	create_neighbour(neigh, 4, 5);
 	add_neighbour(&neigh, 3, 2);

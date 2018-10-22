@@ -30,7 +30,9 @@ void destroy_graph(struct Graph *self) {
 	}
 
 	free(self->adjList);
+	self->adjList = NULL;
 	free(self);
+	self = NULL;
 }
 
 /*
@@ -234,39 +236,31 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
  */
 void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	assert(self);
-	bool control = false;
+	
 	// Verifies that both its endpoints are nodes of the graph
 	if (self->adjList[nodeTail-1] == NULL || self->adjList[nodeHead-1] == NULL) {
 		fprintf(stderr, "Error: The %s node doesn't exist in the graph. Please choose another node\n", self->adjList[nodeTail-1] ? "head" : "tail");
 		return;
 	}
 	
-	if (self->adjList[nodeTail - 1]->neighbour == nodeHead) {
-		remove_neighbour(&self->adjList[nodeTail - 1]);	
-	} else {
-		/*struct Neighbour *curr = self->adjList[nodeTail - 1];
-		while (curr->neighbour != nodeHead && curr != NULL) {
+	struct Neighbour *curr = self->adjList[nodeTail - 1];
+	while (curr) {
+		if (curr->neighbour == nodeHead) {
+			remove_neighbour(&curr);
+		}
+		curr = curr->nextNeighbour;
+	}
+	
+	if (self->isDirected) {
+		curr = self->adjList[nodeHead - 1];
+		while (curr) {
+			if (curr->neighbour == nodeTail) {
+				remove_neighbour(&curr);
+			}
 			curr = curr->nextNeighbour;
 		}
-		if (curr == NULL) {
-			control = true;
-		} else {
-			remove_neighbour(&curr);
-		}*/
 	}
-	if (self->isDirected) {
-		if (self->adjList[nodeHead - 1]->neighbour == nodeTail) {
-			remove_neighbour(&self->adjList[nodeHead - 1]);	
-		} else {
-			/*curr = self->adjList[nodeHead - 1];
-			while (curr->neighbour != nodeTail && curr != NULL) {
-				curr = curr->nextNeighbour;
-			}
-			curr == NULL ? control = true : remove_neighbour(&curr);
-			curr = NULL;*/
-		}	
-	}
-	if (control) fprintf(stderr, "Warning: The edge you are trying to remove or its symmetric do not exist in the graph and were therefore not removed\n");
+
 }
 
 /*

@@ -51,6 +51,7 @@ void remove_neighbour(struct Neighbour **self) {
 	struct Neighbour *tmp = *self;	
 	(*self) = tmp->nextNeighbour;
 	free(tmp);
+	tmp = NULL;
 }
 
 /*
