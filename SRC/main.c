@@ -294,10 +294,22 @@ int main() {
 		default:
 			break;
 		}
+	}*/
+	struct Neighbour *self = malloc(sizeof(struct Neighbour));
+	create_neighbour(self, 0, 1);
+	//printf("%d, %d\n", self->neighbour, self->weight);
+	add_neighbour(&self, 1, 2);
+	add_neighbour(&self, 2, 1);
+	add_neighbour(&self, 4, 6);
+	add_neighbour(&self, 8, 5);
+	remove_neighbour(&self);
+	//destroy_neighbour(&self);
+	struct Neighbour *curr = self;
+	while (curr) {
+		printf("%d, %d\n", curr->neighbour, curr->weight);
+		curr = curr->nextNeighbour;
 	}
-*/	
-	struct Graph *graph = malloc(sizeof(struct Graph));
-	load_graph(graph, "./test");
-	view_graph(graph);
+	printf("%zu\n", neighbour_size(self));
+	free(self);
 	return 0;
 }
