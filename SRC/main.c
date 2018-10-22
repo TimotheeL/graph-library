@@ -298,17 +298,17 @@ int main() {
 */	
 	struct Graph *graph = malloc(sizeof(struct Graph));
 	//create_graph(graph, false, 10);
-	add_node(graph, 1);
+	/*add_node(graph, 1);
 	add_node(graph, 3);
 	remove_node(graph, 3);
 	add_node(graph, 3);
 	add_node(graph, 4);
 	add_edge(graph, 1, 3, 2, false);
 	add_edge(graph, 1, 4, 3, true);
-	//remove_edge(graph, 1, 4);
+	//remove_edge(graph, 1, 4);*/
 	load_graph(graph, "test");
 	view_graph(graph);
-	destroy_graph(graph);
+	//destroy_graph(graph);
 	graph = NULL;
 	/*struct Neighbour *neigh = malloc(sizeof(struct Neighbour));
 	create_neighbour(neigh, 4, 5);
@@ -327,7 +327,6 @@ int main() {
 	}
 	destroy_neighbour(&neigh);
 	neigh = NULL;*/
-	//load_graph(graph, "./test");
 	
 	return 0;
 }
