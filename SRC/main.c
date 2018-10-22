@@ -290,7 +290,7 @@ int main() {
 		}
 	}*/
 
-	struct Graph *graph = malloc(sizeof(struct Graph));
+	//struct Graph *graph = malloc(sizeof(struct Graph));
 	//create_graph(graph, false, 10);
 	//add_node(graph, 1);
 
