@@ -50,7 +50,6 @@ long readLong() {
 }
 
 int main() {
-	/*
 	bool finish = false; // To know if it's finish
 	long answerMain = 0; // Answer for the main menu
 	
@@ -288,55 +287,7 @@ int main() {
 		default:
 			break;
 		}
-	}*/
-
-	struct Graph *graph = malloc(sizeof(struct Graph));
-	//create_graph(graph, false, 10);
-	//add_node(graph, 1);
-
-	/*struct Graph *graph = malloc(sizeof(struct Graph));
-	create_graph(graph, false, 10);
-	add_node(graph, 1);
-	add_node(graph, 3);
-	remove_node(graph, 3);
-	add_node(graph, 3);
-	add_node(graph, 4);
-	add_edge(graph, 1, 3, 2, false);
-	add_edge(graph, 1, 4, 3, true);
-	//remove_edge(graph, 1, 4);
-	load_graph(graph, "test");
-	view_graph(graph);
-	//destroy_graph(graph);
-	graph = NULL;
-	view_graph(graph);
-	//remove_edge(graph, 1, 4);
-	remove_edge(graph, 1, 3);
-	*/
-	load_graph(graph, "test");
-	printf("nodes: %d\n", get_node_number(graph));
-	save_graph(graph, "test1");
-	destroy_graph(graph);
-	graph = NULL;
-	graph = malloc(sizeof(struct Graph));
-	load_graph(graph, "test1");
-	view_graph(graph);
-	/*struct Neighbour *neigh = malloc(sizeof(struct Neighbour));
-	create_neighbour(neigh, 4, 5);
-	add_neighbour(&neigh, 3, 2);
-	add_neighbour(&neigh, 5, 1);
-	add_neighbour(&neigh, 3, 3);
-	add_neighbour(&neigh, 9, 7);
-	remove_neighbour(&neigh);
-	remove_neighbour(&neigh);
-	remove_neighbour(&neigh);
-	remove_neighbour(&neigh);
-	struct Neighbour *curr = neigh;
-	while (curr) {
-		printf("%d, %d\n", curr->neighbour, curr->weight);
-		curr = curr->nextNeighbour;	
 	}
-	destroy_neighbour(&neigh);
-	neigh = NULL;*/
-	
+
 	return 0;
 }
