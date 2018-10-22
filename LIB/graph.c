@@ -52,9 +52,9 @@ void destroy_graph(struct Graph *self) {
  * - Graph *self: the graph structure in which to load the saved graph
  * - char *filename: the file from which you wish to load a graph
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void load_graph(struct Graph *self, const char *filename) {
+int load_graph(struct Graph *self, const char *filename) {
 	FILE* f = fopen(filename, "r");
 	if (!f) {
 		fprintf(stderr, "Error: couldn't open file \"%s\"\n", filename);
@@ -86,13 +86,13 @@ void load_graph(struct Graph *self, const char *filename) {
 					for (int i = 0; i < read - 1; i++) {
 						if (!isdigit(line[i])) {
 							fprintf(stderr, "Error: in %s on line %d: expected digits, found '%c'\n", filename, lineCount, line[i]);
-							return;
+							return -1;
 						}
 					}
 					nbMaxNodes = atoi(line);
 					if (nbMaxNodes < 1) {
 						fprintf(stderr, "Error: in %s on line %d: the max number of nodes can't be null or negative\n", filename, lineCount);
-						return;					
+						return -1;					
 					}
 					break;
 				case 2: // On second instruction, we get the boolean that says whether the graph is directed or not
@@ -101,7 +101,7 @@ void load_graph(struct Graph *self, const char *filename) {
 						case 'n': isDirected = false;break;
 						default:
 							fprintf(stderr, "Error: in %s on line %d: expected 'y' or 'n', found '%c'\n", filename, lineCount, line[0]);
-							return;			
+							return -1;			
 					}
 					if (read - 1 != 1) {
 						fprintf(stderr, "Warning: in %s on line %d: expected 'y' or 'n', found multiple characters. Only the first character was used\n", filename, lineCount);
@@ -112,7 +112,7 @@ void load_graph(struct Graph *self, const char *filename) {
 					node = atoi(part);
 					if (node < 1) {
 						fprintf(stderr, "Error: in %s on line %d: The node, neighbour and weight values must be positive integers\n", filename, lineCount);
-						return;
+						return -1;
 					}				
 					add_node(self, node);
 			}
@@ -141,7 +141,7 @@ void load_graph(struct Graph *self, const char *filename) {
 						case 1:neighbours = part;break;
 						default:
 							fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"\n", filename, lineCount);
-							return;
+							return -1;
 					}
 					c++;
 					part = strtok(NULL, ":");
@@ -156,7 +156,7 @@ void load_graph(struct Graph *self, const char *filename) {
 						weight = atoi(part);
 						if (neigh < 0 || weight < 0) {
 							fprintf(stderr, "Error: in %s on line %d: The node, neighbour and weight values must be positive integers\n", filename, lineCount);
-							return;
+							return -1;
 						}
 						add_edge(self, node, neigh, weight, false);
 						neigh = -1;
@@ -172,6 +172,7 @@ void load_graph(struct Graph *self, const char *filename) {
 	free(line);
 	line = NULL;
 	fclose(f);
+	return 0;
 }
 
 /*
@@ -180,27 +181,28 @@ void load_graph(struct Graph *self, const char *filename) {
  * - Graph *self: the graph in which you wish to add a node 
  *
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void add_node(struct Graph *self, int node) {
+int add_node(struct Graph *self, int node) {
 	assert(self);
 	
 	// Verifies that the node is not already in the graph and that the node's number is correct
 	if (node > self->nbMaxNodes) {
 		fprintf(stderr, "Error: Can't add more than %d nodes to this graph. Please choose a value <= %d\n", self->nbMaxNodes, self->nbMaxNodes);
-		return;
+		return -1;
 	}
 	if (node < 1) {
 		fprintf(stderr, "Error: Can't add this node to this graph. Please choose a value >= 1\n");
-		return;
+		return -1;
 	}
 	if (self->adjList[node-1] != NULL) {
 		fprintf(stderr, "Error: This node already exists in the graph. Please choose another value\n");
-		return;
+		return -1;
 	}
 	struct Neighbour *new = malloc(sizeof(struct Neighbour));
 	create_neighbour(new, -1, 0);
 	self->adjList[node-1] = new;
+	return 0;
 }
 
 /*
@@ -209,18 +211,19 @@ void add_node(struct Graph *self, int node) {
  * - Graph *self: the graph from which you wish to remove a node
  * - int node: the node you wish to remove
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void remove_node(struct Graph *self, int node) {
+int remove_node(struct Graph *self, int node) {
 	assert(self);
 	
 	// Verifies that the node is in the graph and that the node's number is correct
 	if (node > self->nbMaxNodes || node < 1 || self->adjList[node-1] == NULL) {
 		fprintf(stderr, "Error: This node does not exist in the graph\n");
-		return;
+		return -1;
 	}
 	
 	destroy_neighbour(&self->adjList[node-1]);
+	return 0;
 }
 
 /*
@@ -232,22 +235,22 @@ void remove_node(struct Graph *self, int node) {
  * - int weight: the weight of the edge
  * - bool symmetric: symmetric edge is added if true
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric) {
+int add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric) {
 	assert(self);
 	
 	// Both endpoints need to be nodes in the graph and the edge must not already exist in the graph
 	if (self->adjList[nodeTail-1] == NULL || self->adjList[nodeHead-1] == NULL) {
 		fprintf(stderr, "Error: The %s node doesn't exist in the graph. Please choose another node.\n", self->adjList[nodeTail-1] ? "head" : "tail");
-		return;
+		return -1;
 	}
 	
 	struct Neighbour *curr = self->adjList[nodeTail - 1];
 	while (curr != NULL) {
 		if (curr->neighbour == nodeHead) {
 			fprintf(stderr, "Error: This edge already exists in the graph. Please choose another value.\n");
-			return;
+			return -1;
 		}
 		curr = curr->nextNeighbour;
 	}
@@ -256,7 +259,7 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 		while (curr != NULL) {
 			if (curr->neighbour == nodeTail) {
 				fprintf(stderr, "Error: The symmetric edge already exists in the graph. Try removing it or trying again without adding the symmetric edge\n");
-				return;
+				return -1;
 			}
 			curr = curr->nextNeighbour;
 		}
@@ -266,6 +269,7 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
 	if (nodeTail == nodeHead && symmetric && !self->isDirected) {
 		fprintf(stderr, "Warning: Symmetric was not created because this is a self-loop\n");	
 	}
+	return 0;
 }
 
 /*
@@ -275,15 +279,15 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
  * - int nodeTail: the node from which the edge starts
  * - int nodeHead: the node to which the edge arrives
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
+int remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 	assert(self);
 	
 	// Verifies that both its endpoints are nodes of the graph
 	if (self->adjList[nodeTail-1] == NULL || self->adjList[nodeHead-1] == NULL) {
 		fprintf(stderr, "Error: The %s node doesn't exist in the graph. Please choose another node\n", self->adjList[nodeTail-1] ? "head" : "tail");
-		return;
+		return -1;
 	}
 	
 	struct Neighbour *curr = self->adjList[nodeTail - 1];
@@ -303,7 +307,7 @@ void remove_edge(struct Graph *self, int nodeTail, int nodeHead) {
 			curr = curr->nextNeighbour;
 		}
 	}
-
+	return 0;
 }
 
 /*

@@ -54,9 +54,9 @@ void destroy_graph(struct Graph *self);
  * - Graph *self: the graph structure in which to load the saved graph
  * - char * filename: the file from which you wish to load a graph
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void load_graph(struct Graph *self, const char *filename);
+int load_graph(struct Graph *self, const char *filename);
 
 /*
  * Add a node to a graph
@@ -64,9 +64,9 @@ void load_graph(struct Graph *self, const char *filename);
  * - Graph *self: the graph in which you wish to add a node 
  *
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void add_node(struct Graph *self, int node);
+int add_node(struct Graph *self, int node);
 
 /*
  * Remove a node from a graph
@@ -74,9 +74,9 @@ void add_node(struct Graph *self, int node);
  * - Graph *self: the graph from which you wish to remove a node
  * - int node: the node you wish to remove
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void remove_node(struct Graph *self, int node);
+int remove_node(struct Graph *self, int node);
 
 /*
  * Add an edge to a graph
@@ -87,9 +87,9 @@ void remove_node(struct Graph *self, int node);
  * - int weight: the weight of the edge
  * - bool symmetric: symmetric edge is added if true
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric);
+int add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool symmetric);
 
 /*
  * Remove an edge from a graph
@@ -98,9 +98,9 @@ void add_edge(struct Graph *self, int nodeTail, int nodeHead, int weight, bool s
  * - int nodeTail: the node from which the edge starts
  * - int nodeHead: the node to which the edge arrives
  * Return:
- * - void
+ * - int 0: success, -1: error
  */
-void remove_edge(struct Graph *self, int nodeTail, int nodeHead);
+int remove_edge(struct Graph *self, int nodeTail, int nodeHead);
 
 /*
  * Display a graph on the standard output
