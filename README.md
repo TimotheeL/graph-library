@@ -51,11 +51,16 @@ Lines starting with the character # will be considered to be comments and will b
 ```
 ---
 `INCLUDE/` contains the header files for the three libraries implemented. 
+
 `LIB/` contains the source files of those libraries:
  - `list` implements the Neighbour data structure (simple linked list) ;
  - `graph` implements the Graph data structure ;
  - `menu` implements the functions used to create a menu to manipulate a graph.
+
 `OBJ/` contains the .o files created for the different libraries. The .a files are placed directly in the root directory of the project.
+
 `SRC/` contains the source file of the main program.
+
 `BIN/` contains `main`.
+
 `Makefile` and `build.sh` are used to build this program.
