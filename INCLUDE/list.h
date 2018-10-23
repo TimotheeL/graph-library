@@ -7,6 +7,7 @@
 #ifndef LIST_H
 #define LIST_H
 #define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>

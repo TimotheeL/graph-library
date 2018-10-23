@@ -7,7 +7,6 @@
 #ifndef MENU_H
 #define MENU_H
 
-
 #include "graph.h"
 
 #ifdef __cplusplus

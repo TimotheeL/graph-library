@@ -30,3 +30,32 @@ n
 8: (5/2)
 ```
 Lines starting with the character # will be considered to be comments and will be ignored. Please respect this format accurately.
+
+## Project architecture
+```
+|-BIN/
+|-INCLUDE/
+| |-menu.h
+| |-list.h
+| |-graph.h
+|-LIB/
+| |-menu.c
+| |-list.c
+| |-graph.c
+|-OBJ/
+|-SRC/
+| |-main.c
+|-Makefile
+|-build.sh
+|-README.md
+```
+---
+`INCLUDE/` contains the header files for the three libraries implemented. 
+`LIB/` contains the source files of those libraries:
+ - `list` implements the Neighbour data structure (simple linked list) ;
+ - `graph` implements the Graph data structure ;
+ - `menu` implements the functions used to create a menu to manipulate a graph.
+`OBJ/` contains the .o files created for the different libraries. The .a files are placed directly in the root directory of the project.
+`SRC/` contains the source file of the main program.
+`BIN/` contains `main`.
+`Makefile` and `build.sh` are used to build this program.

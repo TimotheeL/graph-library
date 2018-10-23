@@ -8,6 +8,7 @@
 #define GRAPH_H
 
 #include "list.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
