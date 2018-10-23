@@ -324,7 +324,7 @@ void menu_save_graph(struct Graph *graph) {
 		char *filename = malloc(1000 * sizeof(char));
 		do  {
 			printf("Write the name of the file : \n");
-		} while (!read_string(filename, 1000));
+		} while (read_string(filename, 1000) < 0);
 	
 		save_graph(graph, filename);
 		printf("The graph was successfully saved into %s\n\n", filename);

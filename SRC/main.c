@@ -6,7 +6,7 @@
 #include "../INCLUDE/menu.h"
 
 int main() {
-	bool finish = false; // To know if it's finish
+	bool finish = false; // To know if it's finished
 	long answerMain = 0; // Answer for the main menu
 	struct Graph *graph = malloc(sizeof(struct Graph));
 	
@@ -33,28 +33,28 @@ int main() {
 				menu_create_graph(graph);
 				break;
 			case 2: // Load graph
-				//menu_load_graph(graph);
+				menu_load_graph(graph);
 				break;
 			case 3: // Add node
-				//menu_add_node(graph);
+				menu_add_node(graph);
 				break;
 			case 4: // Add edge
-				//menu_add_edge(graph);
+				menu_add_edge(graph);
 				break;
 			case 5: // Remove node
-				//menu_remove_node(graph);
+				menu_remove_node(graph);
 				break;
 			case 6: // Remove edge
-				//menu_remove_edge(graph);
+				menu_remove_edge(graph);
 				break;
 			case 7: // View graph
-				//menu_view_graph(graph);
+				menu_view_graph(graph);
 				break;
 			case 8: // Save graph
-				//menu_save_graph(graph);
+				menu_save_graph(graph);
 				break;
 			case 9: // Quit
-				//finish = menu_quit(graph);
+				finish = menu_quit(graph);
 				break;
 			default:
 				break;
