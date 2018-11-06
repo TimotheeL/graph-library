@@ -4,3 +4,4 @@ SAVES/*
 main
 liblist.a
 libgraph.a
+libmenu.a
