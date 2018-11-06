@@ -345,8 +345,24 @@ void view_graph(const struct Graph *self) {
  */
 void save_graph(const struct Graph *self, const char *filename) {
 	assert(self);
+
+	FILE *output = stdout;
+	// If filename starts with ':' we consider the output to be stdout. (Useful because then we can use this function for view_graph);
+	if (filename[0] != ':') {
+		if (access(filename, F_OK) != -1) {
+	    		if ((output = fopen(filename, "w")) < 0) {
+				fprintf(stderr, "Error: could not open %s\n", filename);		
+			}
+		} else {
+			char buffer[128] = filename;
+			strcpy(buffer, "SAVES/"); 
+			strcat(buffer, filename);			
+			if ((output = fopen(buffer, "w")) < 0) {
+				fprintf(stderr, "Error: could not open %s\n", filename);
+			}
+		}
+	}
 	
-	FILE *output = (filename[0] == ':' ? stdout : fopen(filename, "w"));
 	fprintf(output, "# maximum number of nodes\n%d\n# directed\n", self->nbMaxNodes);
 	fprintf(output, self->isDirected ? "y" : "n"); 
 	fprintf(output, "\n# node: neighbours\n");

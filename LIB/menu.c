@@ -327,7 +327,7 @@ void menu_save_graph(struct Graph *graph) {
 		} while (read_string(filename, 1000) < 0);
 	
 		save_graph(graph, filename);
-		printf("The graph was successfully saved into %s\n\n", filename);
+		printf("The graph was successfully saved into %s. If you didn't specify an existing file, you will find your graph in SAVES/\n\n", filename);
 		free(filename);
 	} else {
 		printf("Please create or load a graph first\n\n");
