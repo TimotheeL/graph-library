@@ -305,7 +305,7 @@ void menu_remove_edge(struct Graph *graph) {
  * Return:
  * - void
  */
-void menu_view_graph(struct Graph *graph) {
+void menu_view_graph(const struct Graph *graph) {
 	if (graph->adjList != NULL) {
 		view_graph(graph);
 	} else {
@@ -319,7 +319,7 @@ void menu_view_graph(struct Graph *graph) {
  * Return:
  * - void
  */
-void menu_save_graph(struct Graph *graph) {
+void menu_save_graph(const struct Graph *graph) {
 	if (graph->adjList != NULL) {
 		char *filename = malloc(1000 * sizeof(char));
 		do  {
@@ -351,4 +351,14 @@ bool menu_quit(struct Graph *graph) {
 		return true;
 	}
 	return false;
+}
+
+/* Menu to calculate the maximum flow of a graph
+ * Params:
+ * - Graph *graph: the graph created in the menu
+ * Return:
+ * - void
+ */
+void menu_maximum_flow(const struct Graph *graph) {
+	return;
 }

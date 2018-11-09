@@ -88,7 +88,7 @@ void menu_remove_edge(struct Graph *graph);
  * Return:
  * - void
  */
-void menu_view_graph(struct Graph *graph);
+void menu_view_graph(const struct Graph *graph);
 
 /* Menu to save a graph
  * Params:
@@ -96,7 +96,7 @@ void menu_view_graph(struct Graph *graph);
  * Return:
  * - void
  */
-void menu_save_graph(struct Graph *graph);
+void menu_save_graph(const struct Graph *graph);
 
 /* Menu to quit the program
  * Params:
@@ -105,6 +105,14 @@ void menu_save_graph(struct Graph *graph);
  * - boolean: true if the user decides to quits, false otherwise
  */
 bool menu_quit(struct Graph *graph);
+
+/* Menu to calculate the maximum flow of a graph
+ * Params:
+ * - Graph *graph: the graph created in the menu
+ * Return:
+ * - void
+ */
+void menu_maximum_flow(const struct Graph *graph);
 
 #ifdef __cplusplus
 }

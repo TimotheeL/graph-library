@@ -400,3 +400,23 @@ size_t get_node_number(const struct Graph *self) {
 	}
 	return n;
 }
+
+/*
+ * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
+ * Params:
+ * - Graph *self: the graph from which you wish to get the maximum flow
+ * - int source: the source node
+ * - int sink: the sink node
+ * Return:
+ * - int m the maximum flow of the graph
+ */
+int ford_fulkerson(const struct Graph *self, int source, int sink) {
+	return 0;
+}
+
+/*
+ * DFS
+ */
+void depth_first_search(const struct Graph *self, int *parents) {
+	return;
+}
