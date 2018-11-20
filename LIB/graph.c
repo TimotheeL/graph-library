@@ -518,6 +518,7 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			// Random path
 			break;
 		default:
+			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
 			// Shortest path
 	}
     
@@ -554,6 +555,7 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 				// Random path
 				break;
 			default:
+				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
 				// Shortest path
 		}
 	}

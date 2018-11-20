@@ -56,7 +56,7 @@ long read_long() {
 		return strtol(TextNumber, NULL, 10);
 	}
 	else {
-		return -1; // We return 0 if the function can't convert to long
+		return -1; // We return -1 if the function can't convert to long
 	}
 }
 
@@ -100,7 +100,7 @@ void menu_load_graph(struct Graph *graph) {
 		char *filename = malloc(1000 * sizeof(char));		
 		do {
 			printf("Write the name of the file (relative path from the root directory of this project) : \n");
-		} while (!read_string(filename, 1000));
+		} while (read_string(filename, 1000));
 
 		if (load_graph(graph, filename) == 0) printf("Your graph was loaded with success!\n\n");
 
@@ -444,7 +444,7 @@ void menu_maximum_flow(const struct Graph *graph) {
 	// print what the user chose (I <3 ternary expressions)
 	printf ("You chose %s.\n\n", alg < 3 ? (alg == 1 ? "BFS" : "DFS") : (alg == 3 ? "random path" : "shortest path"));
 
-	//ford_fulkerson(graph, source, sink, alg);
+	printf("The maximum flow of the graph is : %d\n", ford_fulkerson(graph, source, sink, alg));
 	back_to_menu();
 	
 }

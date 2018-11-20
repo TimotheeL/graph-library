@@ -60,7 +60,7 @@ int main() {
 				break;
 			default: // Quit
 				finish = menu_quit(graph);
-			}
+		}
 	}
 	return 0;
 }
