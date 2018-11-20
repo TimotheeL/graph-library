@@ -114,6 +114,12 @@ bool menu_quit(struct Graph *graph);
  */
 void menu_maximum_flow(const struct Graph *graph);
 
+/* Transition before getting back to menu
+ * Return:
+ * - void
+ */
+void back_to_menu();
+
 #ifdef __cplusplus
 }
 #endif
