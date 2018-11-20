@@ -17,6 +17,8 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <string.h>
+#include <limits.h>
+#include <math.h>
 
 struct Neighbour {
 	int neighbour;

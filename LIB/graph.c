@@ -411,7 +411,30 @@ size_t get_node_number(const struct Graph *self) {
  * - int m the maximum flow of the graph
  */
 int ford_fulkerson(const struct Graph *self, int source, int sink) {
-	return 0;
+	// Initialize empty flow
+	int max_flow = 0;
+	/*for (int i = 0; i < self->nbMaxNodes; i++) {
+		for (int j = 0; j < self->nbMaxNodes; j++) {
+			flow[i][j] = 0;
+		}
+	}
+    
+	// While there exists an augmenting path, increment the flow along this path
+	while (bfs(source,sink)) {
+		// Determine the amount by which we can increment the flow
+		int increment = INT_MAX;
+		for (int i = n-1; pred[i] >= 0; i = pred[i]) {
+			increment = min(increment, capacity[pred[i]][i]-flow[pred[i]][i]);
+		}
+		// Now increment the flow
+		for (int i = n-1; pred[i] >= 0; i = pred[i]) {
+			flow[pred[i]][i] += increment;
+			flow[i][pred[i]] -= increment;
+		}
+		max_flow += increment;
+	}
+	// No augmenting path anymore. We are done*/
+	return max_flow;
 }
 
 /*
