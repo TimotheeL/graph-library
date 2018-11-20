@@ -235,10 +235,11 @@ void menu_add_edge(struct Graph *graph) {
  * - void
  */
 void menu_remove_node(struct Graph *graph) {
+
 	if (get_node_number(graph) == 0) {
 		printf("There are no nodes in the graph\n\n");
-	}
-	else if (graph->adjList != NULL) {
+
+	} else if (graph->adjList != NULL) {
 		long node = 0;
 		do  {
 			printf("Write the number of the node you want to remove : \n");
@@ -266,8 +267,7 @@ void menu_remove_node(struct Graph *graph) {
 void menu_remove_edge(struct Graph *graph) {
 	if (get_node_number(graph) == 0) {
 		printf("There are no edges in the graph\n\n");
-	}
-	else if (graph->adjList != NULL) {
+	} else if (graph->adjList != NULL) {
 		long nodeTail = 0;
 		long nodeHead = 0;
 		
@@ -360,5 +360,72 @@ bool menu_quit(struct Graph *graph) {
  * - void
  */
 void menu_maximum_flow(const struct Graph *graph) {
-	return;
+
+	int source, sink, alg;
+
+	// The graph must be directed. If it's not, we leave the function
+	if (!graph->isDirected) {
+		printf("This operation can only be performed on a directed graph.\n");
+		return;
+	} 
+
+	// The graph must have at least two nodes
+	if (get_node_number(graph) < 2) {
+		printf("Your graph must be composed of at least 2 nodes.\n");
+		return;
+	}
+
+	// Input the source node
+	do {
+		printf("Which node of the graph is your source node?\n");
+		
+		source = read_long();
+
+		// Verifies that the source node is in the graph
+		if (graph->adjList[source - 1] == NULL) {
+			printf("The source node doesn't exist in the graph, please choose another one.\n\n");
+		}
+
+	} while (graph->adjList[source - 1] == NULL);
+
+	printf("Your source node is %d.\n", source);
+
+	// Input the sink node
+	do {
+		printf("Which node of the graph is your sink node?\n");
+		
+		sink = read_long();
+
+		// Verifies that the source node is in the graph
+		if (graph->adjList[sink - 1] == NULL) {
+			printf("The sink node doesn't exist in the graph, please choose another one.\n\n");
+		}
+
+		// Verifies that the sink node isn't the source node
+		if (source == sink) {
+			printf("The node %d is already your source node. Please choose another one to be your sink node.", sink);
+		} 
+	} while (graph->adjList[sink - 1] == NULL || source == sink);
+
+	printf("Your sink node is %d.\n", sink);
+
+	// Choose the algorithm to be used
+	do {
+		printf("What algorithm do you wish to use to find a path between the source and the sink node?\n\t- 1) Depth First Search (DFS)\n\t- 2) Breadth First Search (BFS)\n\t- 3) Shortest path\n\t- 4) Random path\n");
+
+		alg = read_long();
+
+		// Verifies that the input is between 1 and 4
+		if (alg < 1 || alg > 4) {
+			printf("Please choose a number between 1 and 4\n\n");
+		}
+
+	} while (alg < 1 || alg > 4);
+
+	switch (alg) {
+		case 1: printf("You chose DFS.\n");break;
+		case 2: printf("You chose BFS.\n");break;
+		case 3: printf("You chose shortest path.\n");break;
+		default: printf("You chose random path.\n");
+	}
 }
