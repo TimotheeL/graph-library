@@ -122,20 +122,26 @@ void save_graph(const struct Graph *self, const char *filename);
 size_t get_node_number(const struct Graph *self);
 
 /*
+ * BFS
+ */
+bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow);
+
+/*
+ * DFS
+ */
+bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow);
+
+/*
  * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
  * Params:
  * - Graph *self: the graph from which you wish to get the maximum flow
  * - int source: the source node
  * - int sink: the sink node
+ * - int function: the function used for find a path
  * Return:
- * - int m the maximum flow of the graph
+ * - int maxFlow: the maximum flow of the graph
  */
-int ford_fulkerson(const struct Graph *self, int source, int sink);
-
-/*
- * DFS
- */
-void depth_first_search(const struct Graph *self, int *parents);
+int ford_fulkerson(const struct Graph *self, int source, int sink, int function);
 
 #ifdef __cplusplus
 }

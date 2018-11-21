@@ -7,6 +7,10 @@
 #define _GNU_SOURCE
 #include "../INCLUDE/graph.h"
 
+#define WHITE 0
+#define GRAY 1
+#define BLACK 2
+
 /*
  * Create an empty graph"
  * Params:
@@ -402,44 +406,166 @@ size_t get_node_number(const struct Graph *self) {
 }
 
 /*
- * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
- * Params:
- * - Graph *self: the graph from which you wish to get the maximum flow
- * - int source: the source node
- * - int sink: the sink node
- * Return:
- * - int m the maximum flow of the graph
+ * BFS
  */
-int ford_fulkerson(const struct Graph *self, int source, int sink) {
-	// Initialize empty flow
-	int max_flow = 0;
-	/*for (int i = 0; i < self->nbMaxNodes; i++) {
-		for (int j = 0; j < self->nbMaxNodes; j++) {
-			flow[i][j] = 0;
-		}
+bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow) {
+	int nbMaxNodes = self->nbMaxNodes;
+	
+	int *queue = malloc(sizeof(int) * (nbMaxNodes + 2));
+	int head = 0;
+	int tail = 0;
+	
+	int *color = malloc(sizeof(int) * nbMaxNodes);
+	for (int u = 0; u < nbMaxNodes; u++) {
+		color[u] = WHITE;
+		parent[u] = -1;
 	}
-    
-	// While there exists an augmenting path, increment the flow along this path
-	while (bfs(source,sink)) {
-		// Determine the amount by which we can increment the flow
-		int increment = INT_MAX;
-		for (int i = n-1; pred[i] >= 0; i = pred[i]) {
-			increment = min(increment, capacity[pred[i]][i]-flow[pred[i]][i]);
+	
+	color[source] = GRAY;
+	parent[source] = -1;
+	
+	queue[tail] = source;
+	tail++;
+	
+	while (head != tail) {
+		int u = queue[head];
+		head++;
+		
+		// Search all adjacent white nodes v. If the capacity from u to v in the residual network is positive, enqueue v
+		struct Neighbour *curr = self->adjList[u];
+		while (curr) {
+			if (curr->neighbour != -1) {
+				int v = curr->neighbour;
+				if (color[v] == WHITE && (curr->weight - flow[u][v]) > 0) {
+					color[v] = GRAY;
+					parent[v] = u;
+					
+					queue[tail] = v;
+					tail++;
+				
+				}
+			}
+			curr = curr->nextNeighbour;
 		}
-		// Now increment the flow
-		for (int i = n-1; pred[i] >= 0; i = pred[i]) {
-			flow[pred[i]][i] += increment;
-			flow[i][pred[i]] -= increment;
-		}
-		max_flow += increment;
+		
+		color[u] = BLACK;
 	}
-	// No augmenting path anymore. We are done*/
-	return max_flow;
+	
+	// If the color of the target node is black now, it means that we reached it
+	if (color[sink] == BLACK) {
+		free(queue);
+		free(color);
+		return true;
+	}
+	else {
+		free(queue);
+		free(color);
+		return false;
+	}
 }
 
 /*
  * DFS
  */
-void depth_first_search(const struct Graph *self, int *parents) {
-	return;
+bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
+	return false;
+}
+
+/*
+ * Returns minimum of x and y
+ */
+int min (int x, int y) {
+    return x<y ? x : y; 
+}
+/*
+ * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
+ * Params:
+ * - Graph *self: the graph from which you wish to get the maximum flow
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int function: the function used for find a path
+ * Return:
+ * - int maxFlow: the maximum flow of the graph
+ */
+int ford_fulkerson(const struct Graph *self, int source, int sink, int function) {
+	int nbMaxNodes = self->nbMaxNodes;
+	
+	int *parent = malloc(sizeof(int) * nbMaxNodes);
+	
+	int maxFlow = 0;
+	
+	// Initialize empty flow
+	int **flow = malloc(sizeof(int *) * nbMaxNodes);
+	for (int i = 0; i < nbMaxNodes; i++) {
+		flow[i] = malloc(sizeof(int) * nbMaxNodes);
+	}
+	for (int i = 0; i < nbMaxNodes; i++) {
+		for (int j = 0; j < nbMaxNodes; j++) {
+			flow[i][j] = 0;
+		}
+	}
+	
+	// To manage the different function which find a path
+	bool isThereAPath = false;
+	switch (function) {
+		case 1:
+			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
+			break;
+		case 2:
+			// DFS
+			break;
+		case 3:
+			// Random path
+			break;
+		default:
+			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
+			// Shortest path
+	}
+    
+	// While there exists an augmenting path, increment the flow along this path
+	while (isThereAPath) {
+		// Determine the amount by which we can increment the flow
+		int increment = INT_MAX;
+		for (int i = sink; parent[i] >= 0; i = parent[i]) {
+			struct Neighbour *curr = self->adjList[parent[i]];
+			while (curr) {
+				if (curr->neighbour == i) {
+					increment = min(increment, (curr->weight - flow[parent[i]][i]));
+				}
+				curr = curr->nextNeighbour;
+			}
+		}
+		
+		// Increment the flow
+		for (int i = sink; parent[i] >= 0; i = parent[i]) {
+			flow[parent[i]][i] += increment;
+			flow[i][parent[i]] -= increment;
+		}
+		maxFlow += increment;
+		
+		// To find the next path
+		switch (function) {
+			case 1:
+				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
+				break;
+			case 2:
+				// DFS
+				break;
+			case 3:
+				// Random path
+				break;
+			default:
+				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
+				// Shortest path
+		}
+	}
+	
+	free(parent);
+	for (int i = 0; i < nbMaxNodes; i++) {
+		free(flow[i]);
+	}
+	free(flow);
+	
+	// No augmenting path anymore
+	return maxFlow;
 }
