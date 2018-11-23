@@ -7,6 +7,10 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#define WHITE 0
+#define GRAY 1
+#define BLACK 2
+
 #include "list.h"
 
 #ifdef __cplusplus

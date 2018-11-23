@@ -7,10 +7,6 @@
 #define _GNU_SOURCE
 #include "../INCLUDE/graph.h"
 
-#define WHITE 0
-#define GRAY 1
-#define BLACK 2
-
 /*
  * Create an empty graph"
  * Params:
@@ -406,7 +402,7 @@ size_t get_node_number(const struct Graph *self) {
 }
 
 /*
- * BFS
+ * Breadth first search
  */
 bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	int nbMaxNodes = self->nbMaxNodes;
@@ -423,6 +419,13 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 	
 	color[source] = GRAY;
 	parent[source] = -1;
+
+	/*for (int i = 0; i < self->nbMaxNodes; i++) {
+		for (int j = 0; j < self->nbMaxNodes; j++) {
+			printf("%d ", flow[i][j]);
+		}
+		printf("\n");
+	}*/
 	
 	queue[tail] = source;
 	tail++;
@@ -432,12 +435,12 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 		head++;
 		
 		// Search all adjacent white nodes v. If the capacity from u to v in the residual network is positive, enqueue v
-		struct Neighbour *curr = self->adjList[u];
+		struct Neighbour *curr = self->adjList[u - 1];
 		while (curr) {
 			if (curr->neighbour != -1) {
 				int v = curr->neighbour;
-				if (color[v] == WHITE && (curr->weight - flow[u][v]) > 0) {
-					color[v] = GRAY;
+				if (color[v - 1] == WHITE && (curr->weight - flow[u][v - 1]) > 0) {
+					color[v - 1] = GRAY;
 					parent[v] = u;
 					
 					queue[tail] = v;
@@ -449,6 +452,7 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 		}
 		
 		color[u] = BLACK;
+		printf("%d %d\n", head, tail);
 	}
 	
 	// If the color of the target node is black now, it means that we reached it
@@ -465,7 +469,7 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 }
 
 /*
- * DFS
+ * Depth first search
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	return false;
@@ -473,10 +477,16 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 
 /*
  * Returns minimum of x and y
+ * Params:
+ * - int x
+ * - int y
+ * Return:
+ * - int z the minimum value between x and y
  */
-int min (int x, int y) {
-    return x<y ? x : y; 
+int min(int x, int y) {
+    return x < y ? x : y;
 }
+
 /*
  * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
  * Params:
