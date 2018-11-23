@@ -403,6 +403,14 @@ size_t get_node_number(const struct Graph *self) {
 
 /*
  * Breadth first search
+ * Params:
+ * - Graph *self: the graph you wish to apply BFS on
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int *parent: array containing the parents of the path found by BFS
+ * - int **flow: current flow values
+ * Return:
+ * - true if a path exists between source an sink, false otherwise
  */
 bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	int nbMaxNodes = self->nbMaxNodes;
@@ -448,37 +456,78 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 		color[u-1] = BLACK;
 	}
 	
+	free(queue);
 	// If the color of the target node is black now, it means that we reached it
 	if (color[sink-1] == BLACK) {
-		free(queue);
 		free(color);
 		return true;
 	}
-	else {
-		free(queue);
-		free(color);
-		return false;
-	}
-}
-
-	
-	// If the color of the target node is black now, it means that we reached it
-	if (color[sink-1] == BLACK) {
-		free(queue);
-		free(color);
-		return true;
-	}
-	else {
-		free(queue);
-		free(color);
-		return false;
-	}
+	free(color);
+	return false;
 }
 
 /*
  * Depth first search
+ * Params:
+ * - Graph *self: the graph you wish to apply DFS on
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int *parent: array containing the parents of the path found by DFS
+ * - int **flow: current flow values
+ * Return:
+ * - true if a path exists between source an sink, false otherwise
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
+	int nbMaxNodes = self->nbMaxNodes;
+	
+	int *queue = malloc(sizeof(int) * (nbMaxNodes + 2));
+	int head = 0;
+	int tail = 0;
+	
+	int *color = malloc(sizeof(int) * nbMaxNodes);
+	for (int u = 0; u < nbMaxNodes; u++) {
+		color[u] = WHITE;
+		parent[u] = -1;
+	}
+	parent[nbMaxNodes] = -1;
+	
+	color[source-1] = GRAY;
+	parent[source] = -1;
+	
+	queue[tail] = source;
+	tail++;
+	
+	while (head != tail) {
+		int u = queue[head];
+		head++;
+		
+		// Search all adjacent white nodes v. If the capacity from u to v in the residual network is positive, enqueue v
+		struct Neighbour *curr = self->adjList[u-1];
+		while (curr) {
+			if (curr->neighbour != -1) {
+				int v = curr->neighbour;
+				if (color[v-1] == WHITE && (curr->weight - flow[u-1][v-1]) > 0) {
+					color[v-1] = GRAY;
+					parent[v] = u;
+					
+					queue[tail] = v;
+					tail++;
+				
+				}
+			}
+			curr = curr->nextNeighbour;
+		}
+		
+		color[u-1] = BLACK;
+	}
+	
+	free(queue);
+	// If the color of the target node is black now, it means that we reached it
+	if (color[sink-1] == BLACK) {
+		free(color);
+		return true;
+	}
+	free(color);
 	return false;
 }
 
@@ -500,7 +549,7 @@ int min(int x, int y) {
  * - Graph *self: the graph from which you wish to get the maximum flow
  * - int source: the source node
  * - int sink: the sink node
- * - int function: the function used for find a path
+ * - int function: the function used to find a path
  * Return:
  * - int maxFlow: the maximum flow of the graph
  */
