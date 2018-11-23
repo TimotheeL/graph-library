@@ -540,7 +540,7 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 		// Increment the flow
 		for (int i = sink; parent[i] >= 0; i = parent[i]) {
 			flow[parent[i]-1][i-1] += increment;
-			flow[i-1][parent[i-1]] -= increment;
+			flow[i-1][parent[i]-1] -= increment;
 		}
 		maxFlow += increment;
 		
