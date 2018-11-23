@@ -7,10 +7,6 @@
 #define _GNU_SOURCE
 #include "../INCLUDE/graph.h"
 
-#define WHITE 0
-#define GRAY 1
-#define BLACK 2
-
 /*
  * Create an empty graph"
  * Params:
@@ -406,7 +402,7 @@ size_t get_node_number(const struct Graph *self) {
 }
 
 /*
- * BFS
+ * Breadth first search
  */
 bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	int nbMaxNodes = self->nbMaxNodes;
@@ -465,8 +461,22 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 	}
 }
 
+	
+	// If the color of the target node is black now, it means that we reached it
+	if (color[sink-1] == BLACK) {
+		free(queue);
+		free(color);
+		return true;
+	}
+	else {
+		free(queue);
+		free(color);
+		return false;
+	}
+}
+
 /*
- * DFS
+ * Depth first search
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	return false;
@@ -474,10 +484,16 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 
 /*
  * Returns minimum of x and y
+ * Params:
+ * - int x
+ * - int y
+ * Return:
+ * - int z the minimum value between x and y
  */
-int min (int x, int y) {
-    return x<y ? x : y; 
+int min(int x, int y) {
+    return x < y ? x : y;
 }
+
 /*
  * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
  * Params:
