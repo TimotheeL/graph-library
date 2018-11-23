@@ -416,16 +416,10 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 		color[u] = WHITE;
 		parent[u] = -1;
 	}
+	parent[nbMaxNodes] = -1;
 	
-	color[source] = GRAY;
+	color[source-1] = GRAY;
 	parent[source] = -1;
-
-	/*for (int i = 0; i < self->nbMaxNodes; i++) {
-		for (int j = 0; j < self->nbMaxNodes; j++) {
-			printf("%d ", flow[i][j]);
-		}
-		printf("\n");
-	}*/
 	
 	queue[tail] = source;
 	tail++;
@@ -435,12 +429,12 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 		head++;
 		
 		// Search all adjacent white nodes v. If the capacity from u to v in the residual network is positive, enqueue v
-		struct Neighbour *curr = self->adjList[u - 1];
+		struct Neighbour *curr = self->adjList[u-1];
 		while (curr) {
 			if (curr->neighbour != -1) {
 				int v = curr->neighbour;
-				if (color[v - 1] == WHITE && (curr->weight - flow[u][v - 1]) > 0) {
-					color[v - 1] = GRAY;
+				if (color[v-1] == WHITE && (curr->weight - flow[u-1][v-1]) > 0) {
+					color[v-1] = GRAY;
 					parent[v] = u;
 					
 					queue[tail] = v;
@@ -451,12 +445,25 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 			curr = curr->nextNeighbour;
 		}
 		
-		color[u] = BLACK;
-		printf("%d %d\n", head, tail);
+		color[u-1] = BLACK;
 	}
 	
 	// If the color of the target node is black now, it means that we reached it
-	if (color[sink] == BLACK) {
+	if (color[sink-1] == BLACK) {
+		free(queue);
+		free(color);
+		return true;
+	}
+	else {
+		free(queue);
+		free(color);
+		return false;
+	}
+}
+
+	
+	// If the color of the target node is black now, it means that we reached it
+	if (color[sink-1] == BLACK) {
 		free(queue);
 		free(color);
 		return true;
@@ -500,7 +507,7 @@ int min(int x, int y) {
 int ford_fulkerson(const struct Graph *self, int source, int sink, int function) {
 	int nbMaxNodes = self->nbMaxNodes;
 	
-	int *parent = malloc(sizeof(int) * nbMaxNodes);
+	int *parent = malloc(sizeof(int) * (nbMaxNodes + 1));
 	
 	int maxFlow = 0;
 	
@@ -540,7 +547,7 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			struct Neighbour *curr = self->adjList[parent[i]];
 			while (curr) {
 				if (curr->neighbour == i) {
-					increment = min(increment, (curr->weight - flow[parent[i]][i]));
+					increment = min(increment, (curr->weight - flow[parent[i]-1][i-1]));
 				}
 				curr = curr->nextNeighbour;
 			}
@@ -548,8 +555,8 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 		
 		// Increment the flow
 		for (int i = sink; parent[i] >= 0; i = parent[i]) {
-			flow[parent[i]][i] += increment;
-			flow[i][parent[i]] -= increment;
+			flow[parent[i]-1][i-1] += increment;
+			flow[i-1][parent[i-1]] -= increment;
 		}
 		maxFlow += increment;
 		
