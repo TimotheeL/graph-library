@@ -461,20 +461,6 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 	}
 }
 
-	
-	// If the color of the target node is black now, it means that we reached it
-	if (color[sink-1] == BLACK) {
-		free(queue);
-		free(color);
-		return true;
-	}
-	else {
-		free(queue);
-		free(color);
-		return false;
-	}
-}
-
 /*
  * Depth first search
  */
@@ -541,13 +527,25 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
     
 	// While there exists an augmenting path, increment the flow along this path
 	while (isThereAPath) {
+		for (int i = 0; i < nbMaxNodes + 1; i++) {
+			printf("parent[%d] : %d\n", i, parent[i]);
+		}
+		
+		for (int i = 0; i < nbMaxNodes; i++) {
+			for (int j = 0; j < nbMaxNodes; j++) {
+				printf("flow[%d][%d] : %d\n", i, j, flow[i][j]);
+			}
+		}
+		
 		// Determine the amount by which we can increment the flow
 		int increment = INT_MAX;
+		printf("increment : %d\n", increment);
 		for (int i = sink; parent[i] >= 0; i = parent[i]) {
-			struct Neighbour *curr = self->adjList[parent[i]];
+			struct Neighbour *curr = self->adjList[parent[i] - 1];
 			while (curr) {
 				if (curr->neighbour == i) {
 					increment = min(increment, (curr->weight - flow[parent[i]-1][i-1]));
+					printf("curr->weight : %d, curr->neighbour : %d, i : %d, increment : %d\n", curr->weight, curr->neighbour, i, increment);
 				}
 				curr = curr->nextNeighbour;
 			}
@@ -559,6 +557,12 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			flow[i-1][parent[i]-1] -= increment;
 		}
 		maxFlow += increment;
+		
+		for (int i = 0; i < nbMaxNodes; i++) {
+			for (int j = 0; j < nbMaxNodes; j++) {
+				printf("flow[%d][%d] : %d\n", i, j, flow[i][j]);
+			}
+		}
 		
 		// To find the next path
 		switch (function) {
