@@ -126,12 +126,28 @@ void save_graph(const struct Graph *self, const char *filename);
 size_t get_node_number(const struct Graph *self);
 
 /*
- * BFS
+ * Breadth first search
+ * Params:
+ * - Graph *self: the graph you wish to apply BFS on
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int *parent: array containing the parents of the path found by BFS
+ * - int **flow: current flow values
+ * Return:
+ * - true if a path exists between source an sink, false otherwise
  */
 bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow);
 
 /*
- * DFS
+ * Depth first search
+ * Params:
+ * - Graph *self: the graph you wish to apply DFS on
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int *parent: array containing the parents of the path found by DFS
+ * - int **flow: current flow values
+ * Return:
+ * - true if a path exists between source an sink, false otherwise
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow);
 
@@ -141,7 +157,7 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
  * - Graph *self: the graph from which you wish to get the maximum flow
  * - int source: the source node
  * - int sink: the sink node
- * - int function: the function used for find a path
+ * - int function: the function used to find a path
  * Return:
  * - int maxFlow: the maximum flow of the graph
  */
