@@ -8,7 +8,7 @@
 int main() {
 	bool finish = false; // To know if it's finished
 	long answerMain = 0; // Answer for the main menu
-	struct Graph *graph = malloc(sizeof(struct Graph));
+	struct Graph *graph = calloc(1, sizeof(struct Graph));
 	
 	while (finish == false) {
 		do  {

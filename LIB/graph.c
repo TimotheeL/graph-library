@@ -574,18 +574,17 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 	// To manage the different function which find a path
 	bool isThereAPath = false;
 	switch (function) {
-		case 1:
+		case 1: // BFS
 			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
 			break;
-		case 2:
-			// DFS
+		case 2: // DFS
+			isThereAPath = depth_first_search(self, source, sink, parent, flow);
 			break;
-		case 3:
-			// Random path
+		case 3: // Random path
 			break;
-		default:
+		default: // Shortest path
 			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
-			// Shortest path
+			
 	}
     
 	// While there exists an augmenting path, increment the flow along this path
@@ -611,18 +610,17 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 		
 		// To find the next path
 		switch (function) {
-			case 1:
+			case 1: // BFS
 				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
 				break;
-			case 2:
-				// DFS
+			case 2: // DFS
+				isThereAPath = depth_first_search(self, source, sink, parent, flow);
 				break;
-			case 3:
-				// Random path
+			case 3: // Random path
 				break;
-			default:
+			default: // Shortest path
 				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
-				// Shortest path
+				
 		}
 	}
 	

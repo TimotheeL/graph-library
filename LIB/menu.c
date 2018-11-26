@@ -96,18 +96,31 @@ void menu_create_graph(struct Graph *graph) {
  * - void
  */
 void menu_load_graph(struct Graph *graph) {
-	if (graph->adjList == NULL) {
+	long delete = 1;
+	if (graph->adjList != NULL) {
+		// If a graph is already loaded or created we ask the user if he wants to replace it with a new one
+		
+		printf("/!\\ You already have a graph loaded. Do you wish to replace it with a new one?\n\t1) Yes\n\t2) No\n");
+		do {
+			delete = read_long();
+		} while (delete < 1 || delete > 2);
+		
+		// If the user chooses to replace the graph with a new one.
+		
+		if (delete == 1) {
+			destroy_graph(graph);
+			graph = malloc (sizeof(struct Graph));
+		}
+	}
+	if (delete == 1) {
 		char *filename = malloc(1000 * sizeof(char));		
 		do {
 			printf("Write the name of the file (relative path from the root directory of this project) : \n");
 		} while (read_string(filename, 1000));
-
+		
 		if (load_graph(graph, filename) == 0) printf("Your graph was loaded with success!\n\n");
 
 		free(filename);
-	}
-	else {
-		printf("/!\\ Please first destroy your current graph before loading a new one\n\n");
 	}
 	back_to_menu();
 }
