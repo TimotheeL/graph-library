@@ -84,7 +84,18 @@ void menu_create_graph(struct Graph *graph) {
 		create_graph(graph, (tmpChoice == 1) ? true : false, nbMaxNodes);
 		printf("Your graph was created with success!\n\n");
 	} else {
-		printf("/!\\ Please first destroy your current graph before creating a new one\n\n");
+		// If a graph is already loaded or created we ask the user if he wants to destroy it
+		long delete = 0;
+		printf("/!\\ You already have a graph loaded. Do you wish to destroy it?\n\t1) Yes\n\t2) No\n");
+		do {
+			delete = read_long();
+		} while (delete < 1 || delete > 2);
+		
+		// If the user chooses to destroy the graph.
+		
+		if (delete == 1) {
+			destroy_graph(graph);
+		}
 	}
 	back_to_menu();
 }
@@ -109,7 +120,6 @@ void menu_load_graph(struct Graph *graph) {
 		
 		if (delete == 1) {
 			destroy_graph(graph);
-			graph = malloc (sizeof(struct Graph));
 		}
 	}
 	if (delete == 1) {
@@ -377,7 +387,9 @@ bool menu_quit(struct Graph *graph) {
 		choice = read_long();
 	} while (choice < 0 || choice > 1);
 	if (choice == 1) {
-		(graph->adjList != NULL) ? destroy_graph(graph) : free(graph);
+		if (graph->adjList != NULL) {
+			destroy_graph(graph);
+		}
 		return true;
 	}
 	return false;

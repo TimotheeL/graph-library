@@ -62,5 +62,9 @@ int main() {
 				finish = menu_quit(graph);
 		}
 	}
+	
+	free(graph);
+	graph = NULL;
+	
 	return 0;
 }

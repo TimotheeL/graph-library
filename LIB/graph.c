@@ -43,8 +43,6 @@ void destroy_graph(struct Graph *self) {
 
 	free(self->adjList);
 	self->adjList = NULL;
-	free(self);
-	self = NULL;
 }
 
 /*
