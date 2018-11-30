@@ -450,7 +450,6 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 			}
 			curr = curr->nextNeighbour;
 		}
-		
 		color[u-1] = BLACK;
 	}
 	
@@ -462,6 +461,20 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 	}
 	free(color);
 	return false;
+}
+/*
+ * DFS visit : Recursive function for depth first search
+ */
+void dfs_visit(const struct Graph *self, int u, int *color, int *parent, int **flow) {
+	color[u-1] = GRAY;
+	struct Neighbour *curr = self->adjList[u-1];
+	while (curr != NULL) {
+		int v = curr->neighbour;
+		if (color[v-1] == WHITE && (curr->weight - flow[u-1][v-1]) > 0) {
+			dfs_visit(self, v, color, parent, flow);		
+		}
+		curr = curr->nextNeighbour;
+	}
 }
 
 /*
@@ -476,50 +489,23 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
  * - true if a path exists between source an sink, false otherwise
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
-	int nbMaxNodes = self->nbMaxNodes;
 	
-	int *queue = malloc(sizeof(int) * (nbMaxNodes + 2));
-	int head = 0;
-	int tail = 0;
-	
-	int *color = malloc(sizeof(int) * nbMaxNodes);
-	for (int u = 0; u < nbMaxNodes; u++) {
+	int *color = malloc(sizeof(int) * self->nbMaxNodes);
+	for (int u = 0; u < self->nbMaxNodes; u++) {
 		color[u] = WHITE;
 		parent[u] = -1;
 	}
-	parent[nbMaxNodes] = -1;
-	
-	color[source-1] = GRAY;
-	parent[source] = -1;
-	
-	queue[tail] = source;
-	tail++;
-	
-	while (head != tail) {
-		int u = queue[head];
-		head++;
-		
-		// Search all adjacent white nodes v. If the capacity from u to v in the residual network is positive, enqueue v
-		struct Neighbour *curr = self->adjList[u-1];
-		while (curr) {
-			if (curr->neighbour != -1) {
-				int v = curr->neighbour;
-				if (color[v-1] == WHITE && (curr->weight - flow[u-1][v-1]) > 0) {
-					color[v-1] = GRAY;
-					parent[v] = u;
-					
-					queue[tail] = v;
-					tail++;
-				
-				}
-			}
-			curr = curr->nextNeighbour;
+	parent[self->nbMaxNodes] = -1;
+
+	for (int i = 0; i < self->nbMaxNodes; i++) {
+		struct Neighbour *curr = self->adjList[i];
+		int v = curr->neighbour;
+		if (v != -1) {
+			if (color[v-1] == WHITE) {
+				dfs_visit(self, v, color, parent, flow);	
+			}		
 		}
-		
-		color[u-1] = BLACK;
 	}
-	
-	free(queue);
 	// If the color of the target node is black now, it means that we reached it
 	if (color[sink-1] == BLACK) {
 		free(color);
@@ -577,6 +563,10 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			break;
 		case 2: // DFS
 			isThereAPath = depth_first_search(self, source, sink, parent, flow);
+			int len = sizeof(parent) / sizeof(int);
+			for (int i = 0; i < len; i++) {
+				printf("%d\n", parent[i]);
+			}
 			break;
 		case 3: // Random path
 			break;
