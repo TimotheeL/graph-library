@@ -70,23 +70,26 @@ void menu_create_graph(struct Graph *graph) {
 	if (graph->adjList == NULL) {
 		long nbMaxNodes = 0;
 		long tmpChoice = 0;
-		do  {
-			printf("Input a number for the maximum number of nodes your graph can have :\n");
-
+		printf("\n\t---------------CREATE GRAPH---------------\n\n");
+		printf("Maximum number of nodes of your graph : ");
+		nbMaxNodes = read_long();
+		
+		while (nbMaxNodes < 1) {
+			printf("\nPlease input a positive integer : ");
 			nbMaxNodes = read_long();
-		} while (nbMaxNodes < 1);
+		}
 
 	
 		do  {
-			printf("Is your graph directed ? 1 for yes, 0 for no : \n");
+			printf("\nIs your graph directed ?\n\t1. yes\n\t2. no\n");
 			tmpChoice = read_long();
-		} while (tmpChoice != 0 && tmpChoice != 1);
+		} while (tmpChoice != 1 && tmpChoice != 2);
 		create_graph(graph, (tmpChoice == 1) ? true : false, nbMaxNodes);
-		printf("Your graph was created with success!\n\n");
+		printf("\n\t+--------------------------------------+\n\t| Your graph was created with success! |\n\t+--------------------------------------+\n\n");
 	} else {
 		// If a graph is already loaded or created we ask the user if he wants to destroy it
 		long delete = 0;
-		printf("/!\\ You already have a graph loaded. Do you wish to destroy it?\n\t1) Yes\n\t2) No\n");
+		printf("\n\t+--------------------------------------+\n\t| /!\\ You already have a graph loaded. |\n\t+--------------------------------------+\n\n Do you wish to destroy it?\n\n\t1. Yes\n\t2. No\n\n");
 		do {
 			delete = read_long();
 		} while (delete < 1 || delete > 2);
@@ -95,9 +98,9 @@ void menu_create_graph(struct Graph *graph) {
 		
 		if (delete == 1) {
 			destroy_graph(graph);
+			menu_create_graph(graph);
 		}
 	}
-	back_to_menu();
 }
 
 /* Menu to load a graph
@@ -111,7 +114,7 @@ void menu_load_graph(struct Graph *graph) {
 	if (graph->adjList != NULL) {
 		// If a graph is already loaded or created we ask the user if he wants to replace it with a new one
 		
-		printf("/!\\ You already have a graph loaded. Do you wish to replace it with a new one?\n\t1) Yes\n\t2) No\n");
+		printf("\n\t+--------------------------------------+\n\t| /!\\ You already have a graph loaded. |\n\t+--------------------------------------+\n\n Do you wish to replace it with a new one?\n\n\t1. Yes\n\t2. No\n");
 		do {
 			delete = read_long();
 		} while (delete < 1 || delete > 2);
@@ -124,15 +127,15 @@ void menu_load_graph(struct Graph *graph) {
 	}
 	if (delete == 1) {
 		char *filename = malloc(1000 * sizeof(char));		
+		printf("\n\t----------------LOAD GRAPH----------------\n");		
 		do {
-			printf("Write the name of the file (relative path from the root directory of this project) : \n");
+			printf("\nWrite the name of the file (relative path from the root directory of this project) : ");
 		} while (read_string(filename, 1000));
 		
-		if (load_graph(graph, filename) == 0) printf("Your graph was loaded with success!\n\n");
+		if (load_graph(graph, filename) == 0) printf("\n\n\t+-------------------------------------+\n\t| Your graph was loaded with success! |\n\t+-------------------------------------+\n\n");
 
 		free(filename);
 	}
-	back_to_menu();
 }
 
 /* Menu to add a node into a graph
@@ -144,8 +147,9 @@ void menu_load_graph(struct Graph *graph) {
 void menu_add_node(struct Graph *graph) {
 	if (graph->adjList != NULL) {
 		long nbNode = 0;
+		printf("\n\t---------------ADD NODE---------------\n\n");
 		do  {
-			printf("Write the number of the node you want to insert : \n");
+			printf("\nWrite the number of the node you want to insert : ");
 		
 			nbNode = read_long();
 		
@@ -154,7 +158,7 @@ void menu_add_node(struct Graph *graph) {
 				printf("Please choose a value between 1 and %d\n\n", graph->nbMaxNodes);
 			}
 			if (graph->adjList[nbNode-1] != NULL) {
-				printf("This node already exists in the graph. Please choose another value\n\n");
+				printf("\n\t+-------------------------------------------------------------------------+\n\t| /!\\ This node already exists in the graph, please choose another value. |\n\t+-------------------------------------------------------------------------+\n");
 			}
 		} while ((nbNode > graph->nbMaxNodes) || (nbNode < 1) || (graph->adjList[nbNode-1] != NULL));
 	
@@ -383,7 +387,7 @@ void menu_save_graph(const struct Graph *graph) {
 bool menu_quit(struct Graph *graph) {
 	long choice = -1;
 	do {
-		printf("Are you sure you want to quit? Unsaved changes will be lost.\n1: quit\n0: stay\n");
+		printf("Are you sure you want to quit? Unsaved changes will be lost.\n\t1. quit\n\t0. stay\n");
 		choice = read_long();
 	} while (choice < 0 || choice > 1);
 	if (choice == 1) {
@@ -455,7 +459,7 @@ void menu_maximum_flow(const struct Graph *graph) {
 
 	// Choose the algorithm to be used
 	do {
-		printf("What algorithm do you wish to use to find a path between the source and the sink node?\n\t- 1) Breadth First Search (BFS)\n\t- 2) Depth First Search (DFS)\n\t- 3) Random path\n\t- 4) Shortest path\n");
+		printf("What algorithm do you wish to use to find a path between the source and the sink node?\n\t- 1. Breadth First Search (BFS)\n\t- 2. Depth First Search (DFS)\n\t- 3. Random path\n\t- 4. Shortest path\n");
 
 		alg = read_long();
 
@@ -478,7 +482,7 @@ void menu_maximum_flow(const struct Graph *graph) {
 void back_to_menu() {
 	int res = -1;	
 	do {
-		printf("\n-------------------------------------------\n1) Get back to the menu\n");	
+		printf("\n\t------------------------------------------\n\n\t1. Get back to the menu\n");	
 		res = read_long();
 
 	} while (res != 1);

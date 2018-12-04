@@ -12,24 +12,23 @@ int main() {
 	
 	while (finish == false) {
 		do  {
-			printf("---MENU---\n");
-			printf("1. Create graph\n");
-			printf("2. Load graph\n");
-			printf("3. Add node\n");
-			printf("4. Add edge\n");
-			printf("5. Remove node\n");
-			printf("6. Remove edge\n");
-			printf("7. View graph\n");
-			printf("8. Save graph\n");
-			printf("9. Compute the maximum flow of the graph\n");
-			printf("10. Quit\n");
-			printf("-------------------------------------------\n");
-			printf("Input the number of the action you wish to execute:\n");
+			printf("\n\n\t+-------------MENU-------------+\n");
+			printf("\t| 1.  Create graph             |\n");
+			printf("\t| 2.  Load graph               |\n");
+			printf("\t| 3.  Add node                 |\n");
+			printf("\t| 4.  Add edge                 |\n");
+			printf("\t| 5.  Remove node              |\n");
+			printf("\t| 6.  Remove edge              |\n");
+			printf("\t| 7.  View graph               |\n");
+			printf("\t| 8.  Save graph               |\n");
+			printf("\t| 9.  Compute the maximum flow |\n");
+			printf("\t| 10. Quit                     |\n");
+			printf("\t+------------------------------+\n\n");
+			printf("Input the number of the action you wish to execute: ");
 			
 			answerMain = read_long();
 		} while (answerMain < 1 || answerMain > 10);
 		
-		printf("-------------------------------------------\n");
 		switch (answerMain) {
 			case 1: // Create graph
 				menu_create_graph(graph);
