@@ -468,9 +468,10 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 void dfs_visit(const struct Graph *self, int u, int *color, int *parent, int **flow) {
 	color[u-1] = GRAY;
 	struct Neighbour *curr = self->adjList[u-1];
-	while (curr != NULL) {
+	while (curr) {
 		int v = curr->neighbour;
 		if (color[v-1] == WHITE && (curr->weight - flow[u-1][v-1]) > 0) {
+			parent[v] = u;
 			dfs_visit(self, v, color, parent, flow);		
 		}
 		curr = curr->nextNeighbour;
