@@ -454,28 +454,32 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
 	}
 	
 	free(queue);
-	// If the color of the target node is black now, it means that we reached it
-	if (color[sink-1] == BLACK) {
+	
+	if (parent[sink] != -1) {
 		free(color);
 		return true;
 	}
 	free(color);
 	return false;
 }
+
 /*
  * DFS visit : Recursive function for depth first search
  */
-void dfs_visit(const struct Graph *self, int u, int *color, int *parent, int **flow) {
-	color[u-1] = GRAY;
-	struct Neighbour *curr = self->adjList[u-1];
+void dfs_visit(const struct Graph *self, int currentNode, int *color, int *parent, int **flow) {
+	color[currentNode-1] = GRAY;
+	struct Neighbour *curr = self->adjList[currentNode-1];
 	while (curr) {
-		int v = curr->neighbour;
-		if (color[v-1] == WHITE && (curr->weight - flow[u-1][v-1]) > 0) {
-			parent[v] = u;
-			dfs_visit(self, v, color, parent, flow);		
+		if (curr->neighbour != -1) {
+			int v = curr->neighbour;
+			if (color[v-1] == WHITE && (curr->weight - flow[currentNode-1][v-1]) > 0) {
+				parent[v] = currentNode;
+				dfs_visit(self, v, color, parent, flow);
+			}
 		}
 		curr = curr->nextNeighbour;
 	}
+	color[currentNode-1] = BLACK;
 }
 
 /*
@@ -490,25 +494,22 @@ void dfs_visit(const struct Graph *self, int u, int *color, int *parent, int **f
  * - true if a path exists between source an sink, false otherwise
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
+	int nbMaxNodes = self->nbMaxNodes;
 	
-	int *color = malloc(sizeof(int) * self->nbMaxNodes);
-	for (int u = 0; u < self->nbMaxNodes; u++) {
+	int *color = malloc(sizeof(int) * nbMaxNodes);
+	for (int u = 0; u < nbMaxNodes; u++) {
 		color[u] = WHITE;
 		parent[u] = -1;
 	}
 	parent[self->nbMaxNodes] = -1;
 
-	for (int i = 0; i < self->nbMaxNodes; i++) {
-		struct Neighbour *curr = self->adjList[i];
-		int v = curr->neighbour;
-		if (v != -1) {
-			if (color[v-1] == WHITE) {
-				dfs_visit(self, v, color, parent, flow);	
-			}		
+	for (int u = 1; u < nbMaxNodes+1; u++) {
+		if (color[u-1] == WHITE) {
+			dfs_visit(self, u, color, parent, flow);
 		}
 	}
-	// If the color of the target node is black now, it means that we reached it
-	if (color[sink-1] == BLACK) {
+	
+	if (parent[sink] != -1) {
 		free(color);
 		return true;
 	}
@@ -564,20 +565,19 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			break;
 		case 2: // DFS
 			isThereAPath = depth_first_search(self, source, sink, parent, flow);
-			int len = sizeof(parent) / sizeof(int);
-			for (int i = 0; i < len; i++) {
-				printf("%d\n", parent[i]);
-			}
 			break;
 		case 3: // Random path
 			break;
 		default: // Shortest path
 			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
-			
+	}
+	
+	for (int i = 0; i < (nbMaxNodes+1); i++) {
+		printf("parent[%d] : %d\n", i, parent[i]);
 	}
     
 	// While there exists an augmenting path, increment the flow along this path
-	while (isThereAPath) {		
+	while (isThereAPath) {
 		// Determine the amount by which we can increment the flow
 		int increment = INT_MAX;
 		for (int i = sink; parent[i] >= 0; i = parent[i]) {
@@ -585,6 +585,7 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			while (curr) {
 				if (curr->neighbour == i) {
 					increment = min(increment, (curr->weight - flow[parent[i]-1][i-1]));
+					printf("increment : %d\n", increment);
 				}
 				curr = curr->nextNeighbour;
 			}
@@ -609,7 +610,10 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 				break;
 			default: // Shortest path
 				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
-				
+		}
+		
+		for (int i = 0; i < (nbMaxNodes+1); i++) {
+			printf("parent[%d] : %d\n", i, parent[i]);
 		}
 	}
 	
