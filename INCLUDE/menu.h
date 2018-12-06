@@ -88,7 +88,7 @@ void menu_remove_edge(struct Graph *graph);
  * Return:
  * - void
  */
-void menu_view_graph(const struct Graph *graph);
+void menu_view_graph(struct Graph *graph);
 
 /* Menu to save a graph
  * Params:
@@ -96,7 +96,7 @@ void menu_view_graph(const struct Graph *graph);
  * Return:
  * - void
  */
-void menu_save_graph(const struct Graph *graph);
+void menu_save_graph(struct Graph *graph);
 
 /* Menu to quit the program
  * Params:
@@ -114,11 +114,13 @@ bool menu_quit(struct Graph *graph);
  */
 void menu_maximum_flow(const struct Graph *graph);
 
-/* Transition before getting back to menu
+/* Menu to tell the user no graph is yet created and to redirect him to the graph creation or load menu
+ * Params:
+ * - Graph *graph: the graph created in the menu
  * Return:
  * - void
  */
-void back_to_menu();
+void menu_empty_graph(struct Graph *graph);
 
 #ifdef __cplusplus
 }
