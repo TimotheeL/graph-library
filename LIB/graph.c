@@ -408,7 +408,7 @@ size_t get_node_number(const struct Graph *self) {
  * - int *parent: array containing the parents of the path found by BFS
  * - int **flow: current flow values
  * Return:
- * - true if a path exists between source an sink, false otherwise
+ * - true if a path exists between source and sink, false otherwise
  */
 bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	int nbMaxNodes = self->nbMaxNodes;
@@ -491,7 +491,7 @@ void dfs_visit(const struct Graph *self, int currentNode, int *color, int *paren
  * - int *parent: array containing the parents of the path found by DFS
  * - int **flow: current flow values
  * Return:
- * - true if a path exists between source an sink, false otherwise
+ * - true if a path exists between source and sink, false otherwise
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	int nbMaxNodes = self->nbMaxNodes;
@@ -503,11 +503,7 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 	}
 	parent[self->nbMaxNodes] = -1;
 
-	for (int u = 1; u < nbMaxNodes+1; u++) {
-		if (color[u-1] == WHITE) {
-			dfs_visit(self, u, color, parent, flow);
-		}
-	}
+	dfs_visit(self, 1, color, parent, flow);
 	
 	if (parent[sink] != -1) {
 		free(color);
