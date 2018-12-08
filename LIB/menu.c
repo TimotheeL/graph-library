@@ -203,39 +203,39 @@ void menu_add_edge(struct Graph *graph) {
 	}
 
 	if (get_node_number(graph) == 0) {
-		printf("/!\\ There are no nodes in the graph. Please insert nodes before inserting edges\n\n");
+		printf("\n\t+---------------------------------------------+\n\t| /!\\ There are no nodes in the graph.        |\n\t| Please insert nodes before inserting edges. |\n\t+---------------------------------------------+\n\n");
 		return;
 	}
 	
 	do {
+		printf("\n\t-----------------ADD EDGE-----------------\n\n");
 		alreadyCreated = false;
 		do  {
-			printf("Write the number of the tail node : \n");
-			
+			printf("Write the number of the tail node : ");
 			nodeTail = read_long();
 			
 			// Verifies that the tail node is in the graph
 			if (graph->adjList[nodeTail-1] == NULL) {
-				printf("The tail node doesn't exist in the graph. Please choose another node\n\n");
+				printf("\n\t+-----------------------------------------------+\n\t| /!\\ The tail node doesn't exist in the graph. |\n\t| Please choose another node.                   |\n\t+-----------------------------------------------+\n");
 			}
 		} while (graph->adjList[nodeTail-1] == NULL);
 		
 		do  {
-			printf("Write the number of the head node : \n");
+			printf("Write the number of the head node : ");
 			
 			nodeHead = read_long();
 			
 			// Verifies that the head node is in the graph
 			if (graph->adjList[nodeHead-1] == NULL) {
-				printf("The head node doesn't exist in the graph. Please choose another node\n\n");
+				printf("\n\t+-----------------------------------------------+\n\t| /!\\ The head node doesn't exist in the graph. |\n\t| Please choose another node.                   |\n\t+-----------------------------------------------+\n");
 			}
 		} while (graph->adjList[nodeHead-1] == NULL);
 		
 		if (graph->isDirected) {
+			// If the graph is directed we ask the user if he wants to add the symetric edge
 			long tmpChoice = 0;
 			do  {
-				printf("Do you want to add the corresponding symetric edge ? 1 for yes, 0 for no : \n");
-				
+				printf("Do you want to add the corresponding symetric edge ?\n\n\t1. Yes\n\t2. No\n");
 				tmpChoice = read_long();
 			} while (tmpChoice != 0 && tmpChoice != 1);
 			symmetric = (tmpChoice == 1) ? true : false;
