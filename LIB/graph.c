@@ -514,6 +514,28 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 }
 
 /*
+ * Shortest path Floyd-Warshall
+ * Params:
+ * - Graph *self: the graph you wish to apply DFS on
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int *parent: array containing the parents of the path found by DFS
+ * - int **flow: current flow values
+ * Return:
+ * - true if a path exists between source and sink, false otherwise
+ */
+bool floyd_warshall(const struct Graph *self, int source, int sink, int *parent, int **flow) {
+	int nbMaxNodes = self->nbMaxNodes;
+	
+	
+	
+	if (parent[sink] != -1) {
+		return true;
+	}
+	return false;
+}
+
+/*
  * Returns minimum of x and y
  * Params:
  * - int x
@@ -562,10 +584,8 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 		case 2: // DFS
 			isThereAPath = depth_first_search(self, source, sink, parent, flow);
 			break;
-		case 3: // Random path
-			break;
-		default: // Shortest path
-			isThereAPath = breadth_first_search(self, source, sink, parent, flow);
+		default: // Shortest path Floyd-Warshall
+			isThereAPath = floyd_warshall(self, source, sink, parent, flow);
 	}
 	
 	for (int i = 0; i < (nbMaxNodes+1); i++) {
@@ -602,10 +622,8 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			case 2: // DFS
 				isThereAPath = depth_first_search(self, source, sink, parent, flow);
 				break;
-			case 3: // Random path
-				break;
-			default: // Shortest path
-				isThereAPath = breadth_first_search(self, source, sink, parent, flow);
+			default: // Shortest path Floyd-Warshall
+				isThereAPath = floyd_warshall(self, source, sink, parent, flow);
 		}
 		
 		for (int i = 0; i < (nbMaxNodes+1); i++) {

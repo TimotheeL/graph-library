@@ -481,19 +481,19 @@ void menu_maximum_flow(const struct Graph *graph) {
 
 	// Choose the algorithm to be used
 	do {
-		printf("What algorithm do you wish to use to find a path between the source and the sink node?\n\t- 1. Breadth First Search (BFS)\n\t- 2. Depth First Search (DFS)\n\t- 3. Random path\n\t- 4. Shortest path\n");
+		printf("What algorithm do you wish to use to find a path between the source and the sink node?\n\t- 1. Breadth First Search (BFS)\n\t- 2. Depth First Search (DFS)\n\t- 3. Shortest path Floyd-Warshall\n");
 
 		alg = read_long();
 
-		// Verifies that the input is between 1 and 4
-		if (alg < 1 || alg > 4) {
-			printf("Please choose a number between 1 and 4\n\n");
+		// Verifies that the input is between 1 and 3
+		if (alg < 1 || alg > 3) {
+			printf("Please choose a number between 1 and 3\n\n");
 		}
 
-	} while (alg < 1 || alg > 4);
+	} while (alg < 1 || alg > 3);
 
 	// print what the user chose (I <3 ternary expressions)
-	printf ("You chose %s.\n\n", alg < 3 ? (alg == 1 ? "BFS" : "DFS") : (alg == 3 ? "random path" : "shortest path"));
+	printf ("You chose %s.\n\n", alg < 3 ? (alg == 1 ? "BFS" : "DFS") : "Shortest path Floyd-Warshall");
 
 	printf("The maximum flow of the graph is : %d\n", ford_fulkerson(graph, source, sink, alg));
 }

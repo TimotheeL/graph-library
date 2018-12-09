@@ -134,7 +134,7 @@ size_t get_node_number(const struct Graph *self);
  * - int *parent: array containing the parents of the path found by BFS
  * - int **flow: current flow values
  * Return:
- * - true if a path exists between source an sink, false otherwise
+ * - true if a path exists between source and sink, false otherwise
  */
 bool breadth_first_search (const struct Graph *self, int source, int sink, int *parent, int **flow);
 
@@ -147,12 +147,25 @@ bool breadth_first_search (const struct Graph *self, int source, int sink, int *
  * - int *parent: array containing the parents of the path found by DFS
  * - int **flow: current flow values
  * Return:
- * - true if a path exists between source an sink, false otherwise
+ * - true if a path exists between source and sink, false otherwise
  */
 bool depth_first_search(const struct Graph *self, int source, int sink, int *parent, int **flow);
 
 /*
- * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm 
+ * Shortest path Floyd-Warshall
+ * Params:
+ * - Graph *self: the graph you wish to apply DFS on
+ * - int source: the source node
+ * - int sink: the sink node
+ * - int *parent: array containing the parents of the path found by DFS
+ * - int **flow: current flow values
+ * Return:
+ * - true if a path exists between source and sink, false otherwise
+ */
+bool floyd_warshall(const struct Graph *self, int source, int sink, int *parent, int **flow);
+
+/*
+ * Get the maximum flow of a graph from a source node to a sink node using the Ford Fulkerson algorithm
  * Params:
  * - Graph *self: the graph from which you wish to get the maximum flow
  * - int source: the source node
