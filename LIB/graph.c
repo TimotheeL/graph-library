@@ -527,12 +527,85 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 bool floyd_warshall(const struct Graph *self, int source, int sink, int *parent, int **flow) {
 	int nbMaxNodes = self->nbMaxNodes;
 	
+	/* Create dist : the matrix with the shortest path between all pairs of nodes
+	 * Create prec : the matrix with the predecessor of each node on the shortest path
+	 */
+	int **dist = malloc(sizeof(int *) * nbMaxNodes);
+	int **prec = malloc(sizeof(int *) * nbMaxNodes);
+	for (int i = 0; i < nbMaxNodes; i++) {
+		dist[i] = malloc(sizeof(int) * nbMaxNodes);
+		prec[i] = malloc(sizeof(int) * nbMaxNodes);
+	}
+	for (int i = 0; i < nbMaxNodes; i++) {
+		for (int j = 0; j < nbMaxNodes; j++) {
+			if (i == j) {
+				dist[i][j] = 0;
+				prec[i][j] = 0;
+			}
+			else {
+				dist[i][j] = INT_MAX;
+				prec[i][j] = j+1;
+			}
+		}
+	}
+	for (int i = 0; i < nbMaxNodes; i++) {
+		if (self->adjList[i] != NULL) {
+			struct Neighbour *curr = self->adjList[i];
+			while (curr) {
+				if (curr->neighbour != -1) {
+					if ((curr->weight - flow[i][curr->neighbour-1]) > 0) {
+						dist[i][curr->neighbour-1] = curr->weight;
+					}
+				}
+				curr = curr->nextNeighbour;
+			}
+		}
+	}
 	
+	// Initialize parent
+	for (int u = 0; u < nbMaxNodes; u++) {
+		parent[u] = -1;
+	}
+	parent[nbMaxNodes] = -1;
 	
-	if (parent[sink] != -1) {
+	// main loop
+	for (int z = 0; z < nbMaxNodes; z++) {
+		for (int x = 0; x < nbMaxNodes; x++) {
+			for (int y = 0; y < nbMaxNodes; y++) {
+				if (dist[x][z] != INT_MAX && dist[z][y] != INT_MAX && (dist[x][z] + dist[z][y]) < dist[x][y]) {
+					dist[x][y] = dist[x][z] + dist[z][y];
+					prec[x][y] = prec[x][z];
+				}
+			}
+		}
+	}
+	
+	// Fill parent
+	int k = source;
+	do {
+		parent[prec[k-1][sink-1]] = k;
+		k = prec[k-1][sink-1];
+	} while (k != sink);
+	
+	// return true or false and liberate memory
+	if (dist[source-1][sink-1] < INT_MAX) {
+		for (int i = 0; i < nbMaxNodes; i++) {
+			free(dist[i]);
+			free(prec[i]);
+		}
+		free(dist);
+		free(prec);
 		return true;
 	}
-	return false;
+	else {
+		for (int i = 0; i < nbMaxNodes; i++) {
+			free(dist[i]);
+			free(prec[i]);
+		}
+		free(dist);
+		free(prec);
+		return false;
+	}
 }
 
 /*
@@ -587,10 +660,6 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 		default: // Shortest path Floyd-Warshall
 			isThereAPath = floyd_warshall(self, source, sink, parent, flow);
 	}
-	
-	for (int i = 0; i < (nbMaxNodes+1); i++) {
-		printf("parent[%d] : %d\n", i, parent[i]);
-	}
     
 	// While there exists an augmenting path, increment the flow along this path
 	while (isThereAPath) {
@@ -601,7 +670,6 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 			while (curr) {
 				if (curr->neighbour == i) {
 					increment = min(increment, (curr->weight - flow[parent[i]-1][i-1]));
-					printf("increment : %d\n", increment);
 				}
 				curr = curr->nextNeighbour;
 			}
@@ -624,10 +692,6 @@ int ford_fulkerson(const struct Graph *self, int source, int sink, int function)
 				break;
 			default: // Shortest path Floyd-Warshall
 				isThereAPath = floyd_warshall(self, source, sink, parent, flow);
-		}
-		
-		for (int i = 0; i < (nbMaxNodes+1); i++) {
-			printf("parent[%d] : %d\n", i, parent[i]);
 		}
 	}
 	
