@@ -5,9 +5,9 @@ University project developed by Thibault BERTIN and Timothée LAURENT as part of
 
 This project allows you to create and manipulate graphs through a command line menu. Thanks to this, you will be able to create or load a graph (directed or not) from a file, add nodes and edges to it and save it. You will also be able to compute the maximum flow of a directed weighted graph using the *Ford-Fulkerson* method with three different heuristics:
 
-    - *Breadth First Search*
-    - *Depth First Search*
-    - *Shortest path (Floyd-Warshall)*
+- Breadth First Search
+- Depth First Search
+- Shortest path (Floyd-Warshall)
 
 ## Usage
 
