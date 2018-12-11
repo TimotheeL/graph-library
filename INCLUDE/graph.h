@@ -154,10 +154,10 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 /*
  * Shortest path Floyd-Warshall
  * Params:
- * - Graph *self: the graph you wish to apply DFS on
+ * - Graph *self: the graph you wish to apply Floyd-Warshall on
  * - int source: the source node
  * - int sink: the sink node
- * - int *parent: array containing the parents of the path found by DFS
+ * - int *parent: array containing the parents of the path found by Floyd-Warshall
  * - int **flow: current flow values
  * Return:
  * - true if a path exists between source and sink, false otherwise

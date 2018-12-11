@@ -132,7 +132,14 @@ void menu_load_graph(struct Graph *graph) {
 			printf("\nWrite the name of the file (relative path from the root directory of this project) : ");
 		} while (read_string(filename, 1000));
 		
-		if (load_graph(graph, filename) == 0) printf("\n\n\t+-------------------------------------+\n\t| Your graph was loaded with success! |\n\t+-------------------------------------+\n\n");
+		int ret = load_graph(graph, filename);
+		if (ret == 0) {
+			printf("\n\n\t+-------------------------------------+\n\t| Your graph was loaded with success! |\n\t+-------------------------------------+\n\n");
+		} else if (ret == -1) {
+			printf("\n\t+----------------------------------------------------------------------------+\n\t| /!\\ This file couldn't be opened. Please try again with another file name. |\n\t+----------------------------------------------------------------------------+\n");
+		} else {
+			printf("\n\t+-------------------------------------------+\n\t| /!\\ Your file is not correctly formatted. |\n\t+-------------------------------------------+\n");
+		}
 
 		free(filename);
 	}
@@ -410,11 +417,12 @@ void menu_save_graph(struct Graph *graph) {
  */
 bool menu_quit(struct Graph *graph) {
 	long choice = -1;
+	printf("\n\t------------------QUIT------------------\n\n");
 	do {
-		printf("Are you sure you want to quit? Unsaved changes will be lost.\n\t1. quit\n\t0. stay\n");
+		printf("Are you sure you want to quit? Unsaved changes will be lost.\n\t1. Stay\n\t2. Quit\n");
 		choice = read_long();
-	} while (choice < 0 || choice > 1);
-	if (choice == 1) {
+	} while (choice < 1 || choice > 2);
+	if (choice == 2) {
 		if (graph->adjList != NULL) {
 			destroy_graph(graph);
 		}
@@ -432,52 +440,65 @@ bool menu_quit(struct Graph *graph) {
 void menu_maximum_flow(const struct Graph *graph) {
 
 	int source, sink, alg;
-
+	
 	// The graph must be directed. If it's not, we leave the function
-	if (!graph->isDirected) {
-		printf("/!\\ This operation can only be performed on a directed graph.\n");
+	if (!graph->isDirected) {		
+		printf("\n\t+---------------------------------------------------------------+\n\t| /!\\ This operation can only be performed on a directed graph. |\n\t+---------------------------------------------------------------+\n");
 		return;
 	} 
 
 	// The graph must have at least two nodes
 	if (get_node_number(graph) < 2) {
-		printf("/!\\ Your graph must be composed of at least 2 nodes.\n");
+		printf("\n\t+------------------------------------------------------+\n\t| /!\\ Your graph must be composed of at least 2 nodes. |\n\t+------------------------------------------------------+\n");
 		return;
 	}
-
+	
+	printf("\n\t----------------MAXIMUM FLOW--------------\n\n");
 	// Input the source node
+	printf("\nInput the number of your source node, 0 if you want to cancel : ");
 	do {
-		printf("Which node of the graph is your source node?\n");
-		
 		source = read_long();
 
 		// Verifies that the source node is in the graph
-		if (graph->adjList[source - 1] == NULL) {
-			printf("The source node doesn't exist in the graph, please choose another one.\n\n");
+		if (source != 0 && graph->adjList[source - 1] == NULL) {   
+			printf("\n\t+----------------------------------------------------------------------------+\n\t| /!\\ The source node doesn't exist in the graph, please choose another one. |\n\t+----------------------------------------------------------------------------+\n");
+			printf("\nInput the number of your source node, 0 if you want to cancel : ");
 		}
 
-	} while (graph->adjList[source - 1] == NULL);
+	} while (source != 0 && graph->adjList[source - 1] == NULL);
+	
+	// If the user decides to cancel
+	if (source == 0) {
+		return;
+	}
 
-	printf("Your source node is %d.\n", source);
+	printf("\n\nYour source node is %d.\n", source);
 
 	// Input the sink node
+	printf("\nInput the number of your sink node, 0 if you want to cancel : ");
 	do {
-		printf("Which node of the graph is your sink node?\n");
-		
 		sink = read_long();
 
-		// Verifies that the source node is in the graph
-		if (graph->adjList[sink - 1] == NULL) {
-			printf("The sink node doesn't exist in the graph, please choose another one.\n\n");
+		// Verifies that the sink node is in the graph
+		if (sink != 0 && graph->adjList[sink - 1] == NULL) {   
+			printf("\n\t+--------------------------------------------------------------------------+\n\t| /!\\ The sink node doesn't exist in the graph, please choose another one. |\n\t+--------------------------------------------------------------------------+\n");
+			printf("\nInput the number of your sink node, 0 if you want to cancel : ");
 		}
 
 		// Verifies that the sink node isn't the source node
-		if (source == sink) {
-			printf("The node %d is already your source node. Please choose another one to be your sink node. \n", sink);
+		if (source == sink) {       
+			printf("\n\t+---------------------------------------------------------------------------------------------+\n\t| /!\\ The node %d is already your source node. Please choose another one to be your sink node. |\n\t+---------------------------------------------------------------------------------------------+\n", sink);
+			
+			printf("\nInput the number of your sink node, 0 if you want to cancel : ");
 		} 
-	} while (graph->adjList[sink - 1] == NULL || source == sink);
+	} while ((source != 0 && graph->adjList[sink - 1] == NULL) || source == sink);
+	
+	// If the user decides to cancel
+	if (sink == 0) {
+		return;
+	}
 
-	printf("Your sink node is %d.\n", sink);
+	printf("\n\nYour sink node is %d.\n", sink);
 
 	// Choose the algorithm to be used
 	do {
@@ -487,15 +508,15 @@ void menu_maximum_flow(const struct Graph *graph) {
 
 		// Verifies that the input is between 1 and 3
 		if (alg < 1 || alg > 3) {
-			printf("Please choose a number between 1 and 3\n\n");
+			printf("\n\t+--------------------------------------------+\n\t| /!\\ Please choose a number between 1 and 3 |\n\t+--------------------------------------------+\n");
 		}
 
 	} while (alg < 1 || alg > 3);
 
 	// print what the user chose (I <3 ternary expressions)
-	printf ("You chose %s.\n\n", alg < 3 ? (alg == 1 ? "BFS" : "DFS") : "Shortest path Floyd-Warshall");
-
-	printf("The maximum flow of the graph is : %d\n", ford_fulkerson(graph, source, sink, alg));
+	printf ("\nYou chose %s.\n", alg < 3 ? (alg == 1 ? "BFS" : "DFS") : "Shortest path Floyd-Warshall");
+	
+	printf("\n\t+--------------------------------------+\n\t| The maximum flow of the graph is : %d |\n\t+--------------------------------------+\n", ford_fulkerson(graph, source, sink, alg));
 }
 
 /* Menu to tell the user no graph is yet created and to redirect him to the graph creation or load menu

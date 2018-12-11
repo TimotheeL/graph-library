@@ -56,8 +56,8 @@ void destroy_graph(struct Graph *self) {
 int load_graph(struct Graph *self, const char *filename) {
 	FILE* f = fopen(filename, "r");
 	if (!f) {
-		fprintf(stderr, "Error: couldn't open file \"%s\"\n", filename);
-		exit(EXIT_FAILURE);
+		// Couldn't open file
+		return -1;
 	}
 	char *line = NULL;
 	size_t len = 0;
@@ -85,13 +85,13 @@ int load_graph(struct Graph *self, const char *filename) {
 					for (int i = 0; i < read - 1; i++) {
 						if (!isdigit(line[i])) {
 							fprintf(stderr, "Error: in %s on line %d: expected digits, found '%c'\n", filename, lineCount, line[i]);
-							return -1;
+							return -2;
 						}
 					}
 					nbMaxNodes = atoi(line);
 					if (nbMaxNodes < 1) {
 						fprintf(stderr, "Error: in %s on line %d: the max number of nodes can't be null or negative\n", filename, lineCount);
-						return -1;					
+						return -2;					
 					}
 					break;
 				case 2: // On second instruction, we get the boolean that says whether the graph is directed or not
@@ -100,7 +100,7 @@ int load_graph(struct Graph *self, const char *filename) {
 						case 'n': isDirected = false;break;
 						default:
 							fprintf(stderr, "Error: in %s on line %d: expected 'y' or 'n', found '%c'\n", filename, lineCount, line[0]);
-							return -1;			
+							return -2;			
 					}
 					if (read - 1 != 1) {
 						fprintf(stderr, "Warning: in %s on line %d: expected 'y' or 'n', found multiple characters. Only the first character was used\n", filename, lineCount);
@@ -111,7 +111,7 @@ int load_graph(struct Graph *self, const char *filename) {
 					node = atoi(part);
 					if (node < 1) {
 						fprintf(stderr, "Error: in %s on line %d: The node, neighbour and weight values must be positive integers\n", filename, lineCount);
-						return -1;
+						return -2;
 					}				
 					add_node(self, node);
 			}
@@ -140,7 +140,7 @@ int load_graph(struct Graph *self, const char *filename) {
 						case 1:neighbours = part;break;
 						default:
 							fprintf(stderr, "Error: in %s on line %d: wrong format. Expected: \"node: (neighbour/weight), ...\"\n", filename, lineCount);
-							return -1;
+							return -2;
 					}
 					c++;
 					part = strtok(NULL, ":");
@@ -155,7 +155,7 @@ int load_graph(struct Graph *self, const char *filename) {
 						weight = atoi(part);
 						if (neigh < 0 || weight < 0) {
 							fprintf(stderr, "Error: in %s on line %d: The node, neighbour and weight values must be positive integers\n", filename, lineCount);
-							return -1;
+							return -2;
 						}
 						add_edge(self, node, neigh, weight, false);
 						neigh = -1;
@@ -516,10 +516,10 @@ bool depth_first_search(const struct Graph *self, int source, int sink, int *par
 /*
  * Shortest path Floyd-Warshall
  * Params:
- * - Graph *self: the graph you wish to apply DFS on
+ * - Graph *self: the graph you wish to apply Floyd-Warshall on
  * - int source: the source node
  * - int sink: the sink node
- * - int *parent: array containing the parents of the path found by DFS
+ * - int *parent: array containing the parents of the path found by Floyd-Warshall
  * - int **flow: current flow values
  * Return:
  * - true if a path exists between source and sink, false otherwise
