@@ -71,6 +71,6 @@ Lines starting with the character # will be considered to be comments and will b
 
 `BIN/` contains `main`.
 
-`SAVES/` contains example graphs. This folder can be used to store graphs and is where graphs are saved by default.
+`SAVES/` contains example graphs. This folder can be used to store graphs and graphs are saved there by default.
 
 `Makefile` and `build.sh` are used to build this program.
