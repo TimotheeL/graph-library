@@ -3,7 +3,11 @@
 Linked lists and Graph library implementation in C.
 University project developed by Thibault BERTIN and Timothée LAURENT as part of the Graph Theory course (1st year of Master's degree) at the Université de Franche-Comté.
 
-This project allows you to create and manipulate graphs through a command line menu. Thanks to this, you will be able to create or load a graph (directed or not) from a file, add nodes and edges to it and save it.
+This project allows you to create and manipulate graphs through a command line menu. Thanks to this, you will be able to create or load a graph (directed or not) from a file, add nodes and edges to it and save it. You will also be able to compute the maximum flow of a directed weighted graph using the *Ford-Fulkerson* method with three different heuristics:
+
+    - *Breadth First Search*
+    - *Depth First Search*
+    - *Shortest path (Floyd-Warshall)*
 
 ## Usage
 
@@ -45,6 +49,10 @@ Lines starting with the character # will be considered to be comments and will b
 |-OBJ/
 |-SRC/
 | |-main.c
+|-SAVES/
+| |-classicGraph
+| |-circleRight
+| |-circleRightLeft
 |-Makefile
 |-build.sh
 |-README.md
@@ -62,5 +70,7 @@ Lines starting with the character # will be considered to be comments and will b
 `SRC/` contains the source file of the main program.
 
 `BIN/` contains `main`.
+
+`SAVES/` contains example graphs. This folder can be used to store graphs and is where graphs are saved by default.
 
 `Makefile` and `build.sh` are used to build this program.
